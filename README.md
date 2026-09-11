@@ -1,8 +1,8 @@
 # keeper
 
-A monitoring and field-work app for a beekeeping operation.
+A mock monitoring and field-work app for a beekeeping operation.
 
-Sensors on hives report weight, brood temperature, humidity, sound and tilt on a schedule through a gateway at the yard. A backend scores each reading against a baseline for that specific hive and that specific metric, and a reading that departs from its baseline raises an alert. The beekeeper triages the alert and schedules it into the next yard visit.
+'Sensors' on hives report weight, brood temperature, humidity, sound and tilt on a schedule through a gateway at the yard. A backend scores each reading against a baseline for that specific hive and that specific metric, and a reading that departs from its baseline raises an alert. The beekeeper triages the alert and schedules it into the next yard visit.
 
 It helps its user identify, locate and fix a problem. It is not a dashboard. The pitch is inspect when it matters, not on a schedule, because sensors cannot replace an inspection for disease, mite counts or brood pattern. What they do well is tell you when to open a hive and when to leave it alone.
 

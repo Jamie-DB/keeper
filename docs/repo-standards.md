@@ -4,7 +4,7 @@
 
 *Distilled Sep 11, 2026 from the hub's `docs/repo-context.md`, which is the standard every one of Jamie's public repos is held to. That file cannot travel, because it opens by explaining why the repos exist. This one carries the bar without the reason.*
 
-**The audience is someone doing ten minutes of homework before talking to Jamie.** Not users. Every README, doc and commit-facing artifact is a work sample. Docs that would be fine for an ordinary open-source project are not automatically fine here.
+**The audience is someone reviewing codebases, likely for evaluation.** Not users. Every README, doc and commit-facing artifact is a work sample. Docs that would be fine for an ordinary open-source project are not automatically fine here. Reasoning and decision directions carry more weight here than in production code.
 
 ## README standard
 
@@ -23,12 +23,10 @@ A narrative `BUILDLOG.md`, six to ten dated milestone entries derived from commi
 ## Style rules, all outward-facing text
 
 - **No em dashes.** Single dash, or restructure.
-- **No semicolons in prose.** Plain sentences.
 - **No LLM-isms** (delve, leverage, robust), no hype adjectives, no corporate polish.
 - **Metrics and specifics over claims.** "Parses 40-minute transcripts in ~2s" beats "fast". A small unimpressive count is worse than claiming the scope, so claim the scope and keep the count in a trace file.
 - **Shortcomings stated plainly, not spun.** "Known issue," never "opportunity."
 - **Never lead with generation time.** A wall-clock number may only appear alongside its verification cost: the review trail, the issue count, the correction loop. The claim is never "fast," it is "fast to generate, rigorous to verify." A bare small-time claim reads as vibe coding.
-- **Never name a school or an employer in a critique.** Anything about what an institution got wrong gets generalized to the industry. If a reader can map an argument back onto a specific employer, rewrite it wider.
 - **No bad-faith magnets.** Screen every example for whether a hostile or careless reader could make the example the story instead of the work. Religion, politics, demographics, anything identity-adjacent. An example that loses the reader's attention to its own subject has already failed.
 
 ## Before the repo is public
@@ -43,6 +41,6 @@ This one goes public at the first push, so run these before the first push rathe
 
 ## Working with Jamie
 
-- Senior developer using Claude Code as a primary tool. Skip boilerplate explanations. The hard parts are design decisions, integration and edge cases.
-- Ask questions in batches.
-- When he pushes back hard, that is stress-testing, not anger. Push back with substance if he is wrong.
+- Senior developer using Claude Code and Conductor as primary tools. Skip boilerplate explanations, and niceties. Get to the point. The hard parts are design decisions, integration and edge cases.
+- Ask questions. In batches preferred.
+- When he pushes back hard, that is stress-testing, not anger. Push back if he is wrong, but back it up with verified substance, not recollection.

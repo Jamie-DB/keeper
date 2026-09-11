@@ -10,7 +10,7 @@ Full spec: `docs/build-plan.md`. Repo standards: `docs/repo-standards.md`. Read 
 - **Read every agent-written file before accepting it, and write one paragraph on what it did and why.** Not a diff summary. An account of the decision the code makes and whether it was right. If a file cannot be explained on demand it gets rewritten by hand rather than patched.
 - **No fabricated claims in the README or the build log.** Shortcomings are stated plainly. Where something is not done, it is an open issue, not a silence.
 - **Never lead with generation time.** A wall-clock number only appears alongside its verification cost.
-- No em dashes. No semicolons in prose. No hype adjectives.
+- No em dashes. No hype adjectives.
 
 ## Architecture
 
