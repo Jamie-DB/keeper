@@ -12,7 +12,8 @@ Flutter and Dart, in the four Very Good Ventures layers, with a local simulator 
 
 Early. Day one setup. Nothing runs yet.
 
-- Full specification: [`docs/build-plan.md`](docs/build-plan.md)
+- Current plan: [`docs/plan/`](docs/plan/)
+- Original specification, superseded and kept for reference: [`docs/original-plan.md`](docs/original-plan.md)
 - Repo standards: [`docs/repo-standards.md`](docs/repo-standards.md)
 - Design decisions: [`docs/brainstorm/`](docs/brainstorm/)
 
