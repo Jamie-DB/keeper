@@ -1,4 +1,8 @@
-# Hive project: build plan
+# Hive project: original build plan
+
+> **SUPERSEDED. Reference only, do not build from this file.** This is the original specification, frozen at its third iteration on Sep 11, 2026. It is kept because the reasoning behind the domain, the sensor research and the four slices is worth reading, and because the current plan cites it by section.
+>
+> **The authority is `docs/plan/2026-09-11-feat-foundation-and-alert-inbox-plan.md`**, which carries a deltas table naming every point where it overrides this file and why. Where the two disagree, this one is wrong. The overrides already include the repository layout, the GraphQL server, inbox search, peer comparison, the repository shape, and the removal of weather and season from the domain entirely.
 
 > **REPO-SAFE.** Everything in this file may be pasted into a session in the project repo or committed to it. It names no company, no person, and no reason for existing beyond the app itself. Keep it that way. The private half of this plan lives in a separate file outside the project and is named in the package README.
 

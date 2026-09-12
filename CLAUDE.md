@@ -2,7 +2,7 @@
 
 Hive monitoring app. Sensors on beehives report on a schedule, a backend scores each reading against a per-hive per-metric baseline, and the beekeeper triages the resulting alerts into a planned yard visit. It helps its user identify, locate and fix a problem. It is not a dashboard.
 
-Full spec: `docs/build-plan.md`. Repo standards: `docs/repo-standards.md`. Read the spec before proposing work.
+Current plan: `docs/plan/2026-09-11-feat-foundation-and-alert-inbox-plan.md`. That is the authority. `docs/original-plan.md` is the superseded original, kept for its domain reasoning and cited by section. Repo standards: `docs/repo-standards.md`. Read the current plan before proposing work.
 
 ## Hard rules
 
@@ -55,3 +55,10 @@ One issue per slice with a checklist, evidence in comments. Every slice merges t
 - The sync contract is written before the first `TriageAction`, not before the outbox.
 - The domain package is extracted at the start of slice two, deliberately late, and the cost is timed and written up.
 - Hand-written tests are committed before the first green gate runs, so the gate's additions stay visible as a diff.
+
+## Learned Rules
+
+1. [SPEC] Where `docs/plan/2026-09-11-feat-foundation-and-alert-inbox-plan.md` and `docs/original-plan.md` disagree, the plan wins, because the build plan is a frozen third iteration and the plan records every override with its reason in a deltas table.
+2. [DOMAIN] Never reintroduce `YardConditions`, an evaluator weather parameter, or `Season`, because they were cut on Sep 11, 2026 for having no caller. The build plan and the brainstorm both argue to keep the parameter and both are overridden. Cause ranking keys on signals alone, with no calendar anywhere in the domain.
+3. [DOMAIN] An alert is a hive incident, never a metric excursion, because correlated signals across metrics are what let a bear outrank a swarm in the candidate causes. Runs open at the same time on one hive collapse into one alert carrying every signal. The build plan's bear scenario asks for four alerts on one hive and is overridden.
+4. [REVIEW] Audit a design document by tracing data paths and cross-phase dependencies, not by reading prose, because every defect found in this plan came from following data and none came from reading.

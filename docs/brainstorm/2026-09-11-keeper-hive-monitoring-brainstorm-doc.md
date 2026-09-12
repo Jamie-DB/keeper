@@ -13,7 +13,7 @@ It is a user-facing application that helps its user identify, locate and fix a p
 
 Nothing upstream of the app is real. There are no sensors, no gateway and no backend. A local simulator seeds every reading, so this is a mock of a system that could exist rather than a client for one that does. That changes nothing about the code and everything about how it is described.
 
-Full specification is in `docs/build-plan.md`. This document records only what the specification left open or what circumstances changed. The binding constraint is the stopping rule: the repository must be showable by Sun Sep 20, 2026, meaning it runs, the README is honest, the issues are filed, and slice four exists in some form.
+Full specification is in `docs/original-plan.md`. This document records only what the specification left open or what circumstances changed. The binding constraint is the stopping rule: the repository must be showable by Sun Sep 20, 2026, meaning it runs, the README is honest, the issues are filed, and slice four exists in some form.
 
 ## Why This Approach
 
