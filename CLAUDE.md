@@ -29,10 +29,10 @@ Bloc, not Cubit, wherever the event-to-state trail is worth having. Cubit only w
 `mocktail`, never `mockito`. `blocTest()` for every Bloc, never raw `test()` with manual stream assertions. Private mocks per file, underscore-prefixed. Test names read as sentences down the group hierarchy. `setUp` and `tearDown` live inside a group. Mutable objects are `late` and assigned in `setUp`. Widget tests go through the shared `pumpApp` helper, never an inline `pumpWidget(MaterialApp(...))`.
 
 ```
-very_good test --coverage --min-coverage 100 --exclude-coverage '**/*.g.dart'
+very_good test --coverage --min-coverage 100 --exclude-coverage '**/*.g.dart' --collect-coverage-from all
 ```
 
-The exclusion is not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever.
+The exclusion is not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever. `--collect-coverage-from all` is not optional either. The default is `imports`, which leaves any `lib/` file no test imports out of the denominator, so a gate can pass over a file it never measured.
 
 ## Commands and flavors
 
