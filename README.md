@@ -38,4 +38,4 @@ very_good test --coverage --min-coverage 100 --collect-coverage-from all \
   --exclude-coverage '**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart'
 ```
 
-`app/very_good.yaml` carries the same values, so a bare `very_good test` inside `app/` is the same gate. CI repeats them as workflow inputs because the reusable workflow does not read that file. Coverage is collected from all files, not only imported ones, so a file no test loads counts against the floor instead of vanishing from the denominator. The four exclusions are generated code and the entry points.
+`app/very_good.yaml` carries the same values, so a bare `very_good test` inside `app/` is the same gate. CI repeats them as workflow inputs because the reusable workflow does not read that file. Coverage is collected from all files, not only imported ones, so a file no test loads counts against the floor instead of vanishing from the denominator. The four exclusions are generated code and the entry points. The entry points are device wiring, and a test that called `runApp` inside the test binding would prove nothing about them.

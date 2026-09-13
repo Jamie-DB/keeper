@@ -10,6 +10,10 @@
 
 <!--- Describe your changes in detail -->
 
+## Read before accept
+
+<!--- One paragraph per agent-written file: the decision it makes and whether it was right. Not a diff summary. -->
+
 ## Type of Change
 
 <!--- Put an `x` in all the boxes that apply: -->
