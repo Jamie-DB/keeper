@@ -10,11 +10,11 @@ date: 2026-09-11
 
 > **For Jamie:** everything from Overview to Environment is reasoning, read once. Work from [Implementation Phases](#implementation-phases) down. Each phase opens with what it earns, the hand-written ones with what to have open, and the hints stay collapsed until stuck, so read the plan rendered rather than in an editor. Nothing new reaches the screen between Phase 1's counter and Phase 6. Phases 2 to 4 are proved by tests, and the bear is the thread: `ranks bear above swarm when tilt accompanies the weight drop` in Phase 3, `collapses a four-metric bear into one alert` in Phase 4, then the bear's alert on screen in Phase 6.
 
-*Reviewed Sep 11, 2026 by the simplicity, VGV-conventions and scope-splitting agents. Their findings are applied inline rather than listed. Where two disagreed, the disagreement and its resolution are recorded in [Alternative approaches considered](#alternative-approaches-considered). A refinement pass the same day traced the data paths and moved four things: the pull request split, the window unit, the evaluator's shape and the cause-ranking score. Each change is recorded where it lands. A polish pass on Sep 13, 2026 scaffolded the template into a temporary directory and ran the gate on it, which corrected three claims: the CLI has a config file, `all`-files coverage needs the entry points and the localization output excluded or the untouched scaffold fails at 27 percent, and both MCP servers connect. It also moved the implementation hints for the hand-written phases into collapsed blocks so the spec is read first. A teaching pass the same day walked the six phases as a follow-along and the four handoffs between Jamie and the tooling against the skills' own files. It added what each phase earns, what to read first, what cold permits, the read-before-accept lens, and the mechanics of stopping and resuming `/build`. It also corrected three claims: a scoped `very_good test` is the full gate once the config file exists, the template's workflow runs on pull requests and not on branch pushes, and three of the six listed dependencies were already in the scaffold.*
+*Reviewed Sep 11, 2026 by the simplicity, VGV-conventions and scope-splitting agents. Their findings are applied inline rather than listed. Where two disagreed, the disagreement and its resolution are recorded in [Alternative approaches considered](#alternative-approaches-considered). A refinement pass the same day traced the data paths and moved four things: the pull request split, the window unit, the evaluator's shape and the cause-ranking score. Each change is recorded where it lands. A polish pass on Sep 13, 2026 scaffolded the template into a temporary directory and ran the gate on it, which corrected three claims: the CLI has a config file, `all`-files coverage needs the entry points and the localization output excluded or the untouched scaffold fails at 27 percent, and both MCP servers connect. It also moved the implementation hints for the hand-written phases into collapsed blocks so the spec is read first. A teaching pass the same day walked the six phases as a follow-along and the four handoffs between Jamie and the tooling against the skills' own files. It added what each phase earns, what to read first, what the boundary permits, the read-before-accept lens, and the mechanics of stopping and resuming `/build`. It also corrected three claims: a scoped `very_good test` is the full gate once the config file exists, the template's workflow runs on pull requests and not on branch pushes, and three of the six listed dependencies were already in the scaffold. A guidance pass on Sep 13, 2026 retracted the cold-writing claim, which was the plan asking for a first Dart file with no worked example to read, and wrote the missing language guidance into the phases that need it: a reading guide to the scaffold under Phase 1 and one collapsed block of constructs under each of Phases 2 to 4. Every construct and every lint claim in those blocks was verified by analyzing it under Dart 3.13.2, Flutter 3.47.2 and `very_good_analysis` 11.0.0, which corrected two forms the draft had wrong.*
 
 ## Overview
 
-This plan covers the foundation and the first shippable slice of Keeper: scaffold the Flutter app, hand-write the domain and the baseline evaluator cold, hand-write `AlertInboxBloc` cold with its tests, run the first green gate and capture its additions as the evidence, then ship the alert inbox screen against seeded local data.
+This plan covers the foundation and the first shippable slice of Keeper: scaffold the Flutter app, hand-write the domain and the baseline evaluator against worked examples, hand-write `AlertInboxBloc` and its tests the same way, run the first green gate and capture its additions as the evidence, then ship the alert inbox screen against seeded local data.
 
 It corresponds to steps 1 through 6 of the build order in `docs/original-plan.md` section 8, plus the day-one setup list above it. It stops before the domain package extraction, before the simulator, and before any network call.
 
@@ -27,7 +27,7 @@ The repository is public, named, and contains three documents and no code. Nothi
 Three things make this foundation load-bearing rather than boilerplate:
 
 1. **The evaluator is the most showable artifact in the project** and it had no specification. "N consecutive readings, hysteresis at the edge, severity scales with magnitude and duration" is a policy sketch, not a function. Somebody had to pick N. This plan does.
-2. **The hand-written core is evidence and it expires.** Once an agent has touched the domain, the claim "I wrote this cold" cannot be made about it. The order is one-way.
+2. **The hand-written core is evidence and it expires.** Once an agent has written into the domain, the claim "I wrote this and can explain every line" cannot be made about it. The order is one-way.
 3. **The green gate diff is the answer to "how do you work with AI"** and it only exists if the hand-written tests are committed first. Run the gate before that commit and the evidence is gone permanently.
 
 ## Deltas from `docs/original-plan.md`
@@ -60,7 +60,7 @@ Three things make this foundation load-bearing rather than boilerplate:
 
 **How the handoffs work, mechanically.** `/build` picks the first phase whose `**Status:**` line is not the exact string `Done` and builds it, so marking a phase done means editing that line in this file, in the commit that finishes the phase. Any other wording leaves the phase open and the next `/build` starts there, which for Phase 2 is the one failure this plan calls irreversible. When `/build` asks at its start how to commit, answer that Jamie commits himself and do not let it save the preference. That mode stops after every phase with the files staged, which is what read-before-accept needs; the recommended auto-commit mode commits before anything is read. Phase 1 starts in a terminal and `/build` joins partway, see the phase. Phase 5 is not a `/build` phase: Jamie runs `/green-gate` on the PR 2 branch and marks Phase 5 `Done` by hand. `/build` is invoked a second time for Phase 6 only, on a new branch from `main` after PR 2 merges, with Phases 1 to 5 all reading `Done`.
 
-**What the boundary actually protects, and what it does not.** Two claims rest on it: that the domain, the evaluator and the inbox Bloc were written cold before an agent touched the repository, and that the green gate's additions are readable as a diff against what Jamie wrote. Both are protected by commit order. Once Phase 4 is committed, the cold version is in git permanently and nothing later can make that commit agent-written.
+**What the boundary actually protects, and what it does not.** Two claims rest on it: that the domain, the evaluator and the inbox Bloc were written by Jamie before any agent wrote into those directories, and that the green gate's additions are readable as a diff against what Jamie wrote. Both are protected by commit order. Once Phase 4 is committed, Jamie's version is in git permanently and nothing later can make that commit agent-written.
 
 So the rule is about sequence, not ownership. Two things are one-way doors:
 
@@ -69,7 +69,9 @@ So the rule is about sequence, not ownership. Two things are one-way doors:
 
 After PR 2 merges, those files are ordinary code. Phase 6 may extend `Alert`, add a repository method, or reshape anything else it needs, under the same read-before-accept rule that governs the rest of the agent-assisted work. Requiring Phase 4 to anticipate everything Phase 6 might want would force speculative completeness into the one place in this plan that should be minimal.
 
-**What cold permits.** Cold means Jamie typed the code and no agent wrote or dictated it. Reading is open: dart.dev, pub.dev and the package READMEs, `docs/original-plan.md` section 2, the template's own counter feature and tests, and the plugin's skill files. `bloc`, `testing` and `layered-architecture` under the marketplace cache are plain markdown, and they are the standard `flutter-reviewer` grades PR 2 against, so reading them first turns its findings from a lesson after the fact into the standard the code was written to. Asking an agent a question is fine while the answer stays prose. The line is a snippet that lands in a file: an agent-written snippet retyped is not hand-written, and the README sentence stops being true.
+**What the boundary permits, and what replaced cold writing.** Cold writing, meaning Jamie typed the code with no worked example to read, was retracted on Sep 13, 2026. He is new to Dart and has nine days, and "write the class" is not enough direction for a first file in a new language. The first attempt at the fix, pull request 7, added a tested example package in a parallel domain under `docs/learning/` and was closed unmerged the same day: CI's build job is scoped to `app/`, so nothing would ever have analyzed or tested it, and it encoded the evaluator's rules a second time, which gives a policy change two homes. The guidance instead lives in the phases it guides. Phase 1 carries a reading guide to the scaffold and the Dart the later phases assume. Phases 2, 3 and 4 each carry one collapsed block of the constructs that phase introduces, after the spec rather than before it. Those snippets use throwaway types on purpose, so the syntax transfers and nothing in them can be retyped into `app/lib/`.
+
+Reading stays open: dart.dev, pub.dev and the package READMEs, `docs/original-plan.md` section 2, the template's own counter feature and tests, and the plugin's skill files. `bloc`, `testing` and `layered-architecture` under the marketplace cache are plain markdown, and they are the standard `flutter-reviewer` grades PR 2 against, so reading them first turns its findings from a lesson after the fact into the standard the code was written to. Asking an agent a question is fine while the answer stays prose or points into this plan. The one line that remains: no agent writes a file under `app/lib/domain/`, `app/lib/repositories/` or `app/lib/alert_inbox/` in Phases 2 to 4, because the claim the repository makes is that Jamie can explain every line of those on demand.
 
 **The read-before-accept lens.** Every agent-written file, in Phase 1, Phase 5 and Phase 6, is read through the four items in `docs/original-plan.md` section 7, item 3, before its paragraph is written. Value equality, because Dart classes compare by identity and a Bloc emitting an equal-but-not-`==` state rebuilds forever. Sealed types switched exhaustively with no `default`, so a new variant fails to compile. `const` on every constructor that can take it, since a missing one is invisible and is the most common defect in agent-written Flutter. Nothing async beyond what a `Future` needs, because this app has no honest use for an isolate. Phase 6 adds the three things the counter showed in Phase 1: a key on each list item and what it is keyed on, `BlocProvider` creating in the Page against `BlocProvider.value` in the test, and `context.read` in callbacks against `select` or `watch` in `build`. The paragraph says what the file does on each item that applies. Anything else is a diff summary, which is the thing the rule forbids.
 
@@ -277,27 +279,99 @@ One plan-specific fact: both the `dart` and `very-good-cli` MCP servers failed t
   - `very_good create flutter_app keeper` run in a terminal by hand so the output is watched, then `mv keeper app`. Plain `mv`, because nothing is tracked yet and `git mv` refuses an untracked path. The one argument sets both the directory and the Dart package name, so scaffolding directly as `app` would make every import read `package:app/...`, which says nothing in a public work sample. This way imports read `package:keeper/domain/evaluator.dart`. `--output-directory` does not remove the rename: it names a parent directory and still creates `keeper/` inside it, verified against the CLI source. Two flags are worth passing at scaffold time because changing them later is a multi-file edit: `--org-name` with something other than the default `com.example.verygoodcore`, since it becomes the iOS bundle identifier and the Android application id in every platform folder, and `--platforms=android,ios`, since the iOS Simulator and the Android emulator are the claim and the template otherwise generates macOS, web and Windows runners that nothing in this plan builds. Done Sep 13, 2026 with `--org-name engineer.jamiebrown --platforms android,ios`, on a second scaffold: the first was run without either flag from an older copy of this bullet and was replaced before PR 1 merged, while nothing depended on the platform folders.
   - The rename lands in the same commit as the scaffold, so history shows the intended shape rather than a move.
   - **Verify rather than trust**, and record what is actually there: three flavors with their own entry points, `bootstrap.dart` with a `BlocObserver`, localization wired with `context.l10n`, a mirrored `test/` tree, **`test/helpers/pump_app.dart` and `test/helpers/helpers.dart`**, `very_good_analysis` present, and a GitHub Actions workflow with coverage enforced. Anything missing is added by hand and noted.
-  - **Read the tree before `/build` touches it**, in this order: `lib/bootstrap.dart`, `lib/main_development.dart`, `lib/app/view/app.dart`, `lib/counter/` with `test/counter/`, then `test/helpers/pump_app.dart`. The counter is the template's worked example of everything Phase 4 writes and Phase 6 asks an agent for: `CounterPage` creates the Cubit under `BlocProvider`, `CounterView` reads it with `context.read` in callbacks and `context.select` in `build`, and `counter_page_test.dart` declares a private `_MockCounterCubit extends MockCubit`, stubs `state`, and pumps the View under `BlocProvider.value` through `pumpApp`. `AppBlocObserver` in `bootstrap.dart` logs every state change to the console, which is the transition trail the Bloc-over-Cubit rule refers to, and it is worth watching during Phase 6's manual check. Phase 6 deletes the counter, so this is the only time it is there to read. Reading template output does not touch the cold claim, which is about who wrote the files.
+  - **Read the tree before `/build` touches it**, in this order: `lib/bootstrap.dart`, `lib/main_development.dart`, `lib/app/view/app.dart`, `lib/counter/` with `test/counter/`, then `test/helpers/pump_app.dart`. The counter is the template's worked example of everything Phase 4 writes and Phase 6 asks an agent for: `CounterPage` creates the Cubit under `BlocProvider`, `CounterView` reads it with `context.read` in callbacks and `context.select` in `build`, and `counter_page_test.dart` declares a private `_MockCounterCubit extends MockCubit`, stubs `state`, and pumps the View under `BlocProvider.value` through `pumpApp`. `AppBlocObserver` in `bootstrap.dart` logs every state change to the console, which is the transition trail the Bloc-over-Cubit rule refers to, and it is worth watching during Phase 6's manual check. Phase 6 deletes the counter, so this is the only time it is there to read. The collapsed block at the end of this phase annotates the whole tree and the Dart the later phases assume. Reading template output does not touch the hand-written claim, which is about who wrote the files under Phases 2 to 4.
   - **Move the workflow to the repository root.** The scaffold writes `.github/workflows/main.yaml` inside the package it generates, so after the rename it lands at `app/.github/workflows/`, alongside `license_check.yaml`, `dependabot.yaml`, `cspell.json` and `PULL_REQUEST_TEMPLATE.md`, which move with it. GitHub Actions only reads `.github/` at the repository root and will silently run nothing. Move it to the root and set the build job's `working_directory` input to `app`. The template's workflow triggers on `pull_request` to `main` and `push` to `main` only, verified against the bundle, so a branch push alone runs nothing. Confirm the `build`, `semantic-pull-request` and `spell-check` jobs appear when PR 1 opens, and read no jobs as the workflow being in the wrong place. Give the moved `PULL_REQUEST_TEMPLATE.md` a `## Read before accept` heading under `## Description`: `/create-pr` builds the body from that file, so every pull request gets a slot for the per-file paragraphs, PR 1 for what the scaffold actually contained and PR 2 for the two deviations.
   - **Two of the moved files still point at the old root**, verified against the template bundle and the `v1` reusable workflows on Sep 13, 2026. `dependabot.yaml` has the `pub` ecosystem at `directory: "/"`, which becomes `/app`; the `github-actions` entry stays at `/`. `license_check.yaml` needs `working_directory: app`, its two `paths` filters changed from `pubspec.yaml` to `app/pubspec.yaml`, and `flutter_version: "3.47.x"` added to match `main.yaml`, because the reusable license workflow runs plain `dart pub get` when no Flutter version is given and that cannot resolve a Flutter package. The spell-check job is covered below.
   - **The root `.gitignore` swallows two things the template means to commit.** It ignores `.idea/` and `.vscode/` at any depth, and git cannot re-include a file inside an ignored directory, so `app/.vscode/launch.json` and `app/.idea/runConfigurations/` never reach a commit even though the template's own `.gitignore` re-includes them. Anchor the root patterns to `/.idea/` and `/.vscode/` so the nested rules apply. The launch file carries the flavor run configurations and is worth keeping.
   - **The coverage settings live in two places that must agree: the CI workflow and `app/very_good.yaml`.** The generated workflow calls the `very_good_workflows` reusable Flutter workflow, whose inputs are `coverage_excludes`, `min_coverage`, `working_directory` and `collect_coverage_from`, confirmed against the `v1` workflow source on Sep 11, 2026. CI reads only those inputs, because the reusable workflow pins CLI 1.1.1, which predates the config file. Locally, CLI 1.4.0 and later read `very_good.yaml` from the package directory or any ancestor, and its `test` section supplies the default for every flag not passed on the command line. An earlier draft of this plan said no such file existed; it has since Aug 10, 2026. Write it with `coverage: true`, `min_coverage: "100"`, `collect_coverage_from: all` and the exclusion below, so a bare `very_good test` in `app/` is the gate for a fresh clone, for a terminal and for the MCP tool alike. Put the full command in the README's build instructions as well, so the gate is visible without opening the file.
   - **Coverage is collected from all files, not from imported files.** The workflow's `collect_coverage_from` input and the CLI's `--collect-coverage-from` flag both default to `imports`, verified Sep 11, 2026 against the workflow source and CLI 1.5.0. At that default a file in `lib/` that no test imports is absent from the denominator, so a gate can report 100 over a package it has not measured. Set the input to `all` and carry `--collect-coverage-from all` on every gate command in this plan and the README.
   - **Under `all`, the scaffold is red until four exclusions are in place.** Verified Sep 13, 2026 by scaffolding the template into a temporary directory and running the gate: the untouched template reports 27 percent, not 100. `all` mode appends every `lib/` file that has no coverage record as fully uncovered, and four kinds of file have none: `bootstrap.dart` and the three `main_*.dart` entry points, which no test loads, and the localization output under `lib/l10n/gen/`, whose `// coverage:ignore-file` header removes it from the record so `all` mode adds it straight back. The exclusion is therefore `**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart`, space separated, in both the workflow input and `very_good.yaml`. The CLI has split that list since 1.1.0, so the pinned CI version handles it. With it in place the untouched scaffold passes at 100, verified the same way. Excluding the entry points is stated in the README with its reason: they are device wiring, and a test that calls `runApp` inside the test binding would prove nothing about them. Slice one has no `.g.dart` at all, so that glob is set for the codegen slices two and four bring and does nothing yet.
-  - **What else the template ships, verified against the CLI 1.5.0 bundle.** `analysis_options.yaml` includes `bloc_lint` recommended and CI runs `bloc lint`, so the hand-written Bloc in Phase 4 meets `avoid_public_bloc_methods`, `avoid_public_fields`, `avoid_flutter_imports`, `prefer_file_naming_conventions` and `prefer_void_public_cubit_methods` cold. The last one accepts `Future<void>`, so `AlertDetailCubit` in Phase 6 may await its fetch. The workflow has three jobs: `build`, `semantic-pull-request`, which requires a conventional-commit title on every pull request, and `spell-check` over every `.md` file with incremental mode off. Moved to the root, spell-check scans `docs/` and fails on the beekeeping vocabulary. An earlier draft set `working_directory: app`, but the reusable workflow passes that value as the cspell root and resolves its `config` input against it, so the job would look for `app/.github/cspell.json`, which no longer exists after the move. Keep the root and narrow `includes` to the root `README.md` and `app/**/*.md` instead. `docs/` goes unchecked and the README is checked by the job rather than by eye. Verified Sep 13, 2026: the root README passes cspell with the template dictionaries. Localization codegen writes to `lib/l10n/gen/` under a `// coverage:ignore-file` header the template puts there. That is the generated-code carve-out from the no-ignores rule, not a violation of it. It does not spare the directory an exclusion under `all`, see the bullet above. The template depends on `material_ui` and `App` imports it, so Phase 6's theme work starts from that package rather than adding one.
+  - **What else the template ships, verified against the CLI 1.5.0 bundle.** `analysis_options.yaml` includes `bloc_lint` recommended and CI runs `bloc lint`, so the hand-written Bloc in Phase 4 has to meet `avoid_public_bloc_methods`, `avoid_public_fields`, `avoid_flutter_imports`, `prefer_file_naming_conventions` and `prefer_void_public_cubit_methods` on its own. The last one accepts `Future<void>`, so `AlertDetailCubit` in Phase 6 may await its fetch. The workflow has three jobs: `build`, `semantic-pull-request`, which requires a conventional-commit title on every pull request, and `spell-check` over every `.md` file with incremental mode off. Moved to the root, spell-check scans `docs/` and fails on the beekeeping vocabulary. An earlier draft set `working_directory: app`, but the reusable workflow passes that value as the cspell root and resolves its `config` input against it, so the job would look for `app/.github/cspell.json`, which no longer exists after the move. Keep the root and narrow `includes` to the root `README.md` and `app/**/*.md` instead. `docs/` goes unchecked and the README is checked by the job rather than by eye. Verified Sep 13, 2026: the root README passes cspell with the template dictionaries. Localization codegen writes to `lib/l10n/gen/` under a `// coverage:ignore-file` header the template puts there. That is the generated-code carve-out from the no-ignores rule, not a violation of it. It does not spare the directory an exclusion under `all`, see the bullet above. The template depends on `material_ui` and `App` imports it, so Phase 6's theme work starts from that package rather than adding one.
   - The MIT LICENSE landed with the plan refinement PR on Sep 12, 2026, after the repository had already been public without one for a day. The scaffold generates its own `LICENSE` inside `app/`; delete that copy so there is one at the root. Confirm `git config user.email` is the personal address before committing, because fixing it later means a history rewrite.
   - Install CodeRabbit. Free tier, and the repository is already public.
   - **Issues are not filed here.** The ten domain issues already have a paragraph each in `docs/original-plan.md` section 1, so redrafting them into a second document is copying rather than deciding. Four slice issues need one line each. Filing more than two issues for a single effort needs Jamie's approval before any are created, so this happens when he says go and it does not gate this phase.
 - **Acceptance criteria:** `flutter run --flavor development --target lib/main_development.dart` launches the counter app on a simulator. The generated test suite passes. **The workflow sits at the repository root and its three jobs appear on PR 1.** **The four-glob exclusion and `collect_coverage_from: all` are present in that workflow and in `app/very_good.yaml`**, the workflow being the version that gates merges, and a bare `very_good test` in `app/` passes at 100 on the untouched scaffold. PR 1 merges green on the template's own tests.
 - **Validation:** `test -d .github/workflows && ! test -d app/.github && grep -rq 'g.dart' .github/workflows/ && test -f app/very_good.yaml` proves the workflow move, the exclusion and the config file. Then `cd app && flutter analyze` and the unscoped coverage command. Then `manual` 1. Open PR 1 with `/create-pr` 2. Confirm the `build`, `semantic-pull-request` and `spell-check` jobs appear on the pull request, since a workflow in the wrong place fails silently and a branch push runs nothing either way 3. Confirm `flutter run --flavor development --target lib/main_development.dart` launches on a simulator
 
+<details>
+<summary><strong>Reading the scaffold, and the Dart the later phases assume.</strong> Reference, not work. Verified Sep 13, 2026 against Dart 3.13.2, Flutter 3.47.2 and <code>very_good_analysis</code> 11.0.0.</summary>
+
+Nothing here needs writing. This is the worked example Phases 2 to 4 build on, plus the language the later phases lean on without stopping to explain.
+
+**The tree, annotated.**
+
+```
+app/
+  lib/
+    main_development.dart   entry point, one per flavor
+    main_staging.dart
+    main_production.dart
+    bootstrap.dart          shared startup: error handler, observer, runApp
+    app_bloc_observer.dart  logs every Bloc change and error
+    app/
+      app.dart              barrel: exports the feature
+      view/app.dart         the MaterialApp: theme, localization, home
+    counter/
+      counter.dart          barrel
+      cubit/counter_cubit.dart
+      view/counter_page.dart
+    l10n/
+      l10n.dart             the context.l10n extension
+      arb/app_en.arb        the strings, one file per language
+      gen/                  generated, never edited
+  test/                     mirrors lib/ one to one
+    helpers/pump_app.dart   wraps a widget in MaterialApp with localization
+    helpers/helpers.dart    barrel for the helpers
+  very_good.yaml            the test gate's settings
+  analysis_options.yaml     the lint set
+  l10n.yaml                 where the strings live and where codegen writes
+  pubspec.yaml              dependencies
+```
+
+**Three flavors, one bootstrap.** `main_development.dart` is four lines: import `App` and `bootstrap`, then `await bootstrap(() => const App())`. The three `main_*.dart` files are identical today and exist so each flavor can later point at a different backend, development at the in-process fake and staging at the local simulator. `bootstrap.dart` does the startup every flavor shares: it installs a `FlutterError.onError` handler, sets `Bloc.observer`, and calls `runApp` on whatever widget the flavor passed in. The observer sits in its own file so the coverage gate can measure it, and `bootstrap.dart` is excluded from coverage because a test that calls `runApp` proves nothing about it.
+
+**Page, View, barrel.** Every feature is a folder with the same three parts, and the counter is the template's example of all three.
+
+- `counter/counter.dart` is a **barrel**, a file of `export` lines. Other code imports the barrel, never a file inside the folder, so moving a feature's internals around does not touch its importers.
+- `counter/cubit/counter_cubit.dart` holds the state as a `Cubit<int>`. A Cubit is the simple form of a Bloc: methods that call `emit`, no events. This plan uses a Bloc for the inbox because events give a trail, and a Cubit for the detail view because the state is simple.
+- `counter/view/counter_page.dart` holds two widgets. `CounterPage` **provides** the Cubit with `BlocProvider`. `CounterView` **consumes** it. That split is the convention everywhere in this repository, and it is the thing that lets a widget test hand the View a mock.
+
+Three ways a widget talks to a Bloc, all three in that one file: `context.select((CounterCubit c) => c.state)` in `build`, which rebuilds the widget when the selected value changes; `context.read<CounterCubit>().increment()` in a callback, which reads without subscribing; and `BlocProvider(create: ..., child: ...)`, which creates and owns the Cubit and closes it when the widget goes away.
+
+**Localization.** No user-facing string is a literal in a widget. `app_en.arb` is a JSON file of keys to strings, codegen turns it into `AppLocalizations` under `lib/l10n/gen/`, and `l10n.dart` adds one extension so widgets write `context.l10n.counterAppBarTitle`. Phase 6's strings go in the ARB first.
+
+**Tests mirror `lib/`.** One test file per source file, same path, `_test` suffix. `test/helpers/pump_app.dart` is an extension on `WidgetTester` giving it a `pumpApp` that wraps the widget in a `MaterialApp` with the localization delegates, so no test builds that by hand. An `extension` adds a method to a type you do not own.
+
+**Dart the later phases assume.**
+
+- `const` marks a compile-time constant. A `const` constructor promises every field is `final` and the instance can be built at compile time. When the analyzer asks for `const`, it is right.
+- `late` means assigned before first use. Tests use it for objects created in `setUp`. The evaluator in Phase 3 may use it for a field one branch always sets before another reads it.
+- `extension` adds methods to an existing type. `extension type` is a different feature: a zero-cost wrapper that gives an existing value a new static type. Both appear in Phase 2.
+- `part` and `part of` split one library across files. The Bloc convention uses them so the event and state files share the Bloc's imports rather than repeating them.
+- `Future<void> main() async` is an async entry point, and `await` works as it does in Swift. Isolates do not map to Swift concurrency, because there is no shared memory, and nothing in this plan needs one.
+- A file starting with `// dart format off` or `// coverage:ignore-file` is generated. Edit its source and regenerate.
+
+**Five lints that fire on code most tutorials would call idiomatic**, because Dart 3.13 added a shorter constructor syntax and `very_good_analysis` 11 prefers it. Each was confirmed by writing both forms and analyzing them, and the first two will land on the first file Phase 2 writes.
+
+| Lint | What it wants |
+|---|---|
+| `unnecessary_type_name_in_constructor` | `const new({required this.id});`, not `const Hive({required this.id});`. `new` stands in for the class name, so a rename touches one line |
+| `unnecessary_const_in_enum_constructor` | An enum's constructor drops `const` entirely: `new({required this.sigmaFloor});` |
+| `prefer_initializing_formals` | Take the field directly as `required this._repository`. Never a plain parameter assigned in an initializer list, and this holds even when the constructor also calls `super` |
+| `always_put_required_named_parameters_first` | `required` parameters come before optional ones in the list |
+| `empty_container_bodies` | An empty class body is a `;`, not `{}`. So `class _MockAlertRepository extends Mock implements AlertRepository;` |
+
+Three more worth knowing before the first file. `always_use_package_imports` forbids relative imports, so write `package:keeper/domain/metric.dart` and never `../`. `avoid_catches_without_on_clauses` makes the `on Exception` clause mandatory on every `catch`. And `very_good_analysis` 11 sets the formatter to `trailing_commas: automate`, so `dart format` places trailing commas itself; run it and stop arguing with it.
+
+</details>
+
 ### Phase 2: False-positive policy and domain types
 
 - **Status:** Not started
-- **Owner:** **Jamie, by hand. No agent touches these files.**
+- **Owner:** **Jamie, by hand, against the constructs block at the end of this phase. No agent writes these files.**
 - **Scope:** Write the false-positive policy as a document first, then the domain value classes with their unit tests.
 - **Earns:** A false-positive policy defended one sentence per number, and the first Dart reps pointable by file. `Equatable`, because Dart classes are identity-equal by default, unlike a Swift struct, and a Bloc emitting an equal-but-not-`==` state rebuilds forever. Sealed classes with exhaustive `switch`, the closest Dart has to Swift enums with associated values. A record, two extension types, and a `const` constructor on every domain type, which the analyzer asks for on an `Equatable` class anyway and is the first meeting with `const` as a contract. Pure Dart tests that run in milliseconds without a widget.
-- **Read first:** the eight decisions through the incident paragraphs, the `Alert` and anomaly shapes under State shape, and `docs/original-plan.md` section 2 for each type's fields. Where they differ this plan wins: the fifth metric is `tilt`, not motion, and nothing this plan cut or deferred is written.
+- **Read first:** the eight decisions through the incident paragraphs, the `Alert` and anomaly shapes under State shape, `docs/original-plan.md` section 2 for each type's fields, and the collapsed constructs block at the end of this phase. Where they differ this plan wins: the fifth metric is `tilt`, not motion, and nothing this plan cut or deferred is written.
 - **Files touched:** `docs/false-positive-policy.md`, `app/pubspec.yaml` (adds `equatable`), `app/lib/domain/*.dart`, `app/test/domain/*_test.dart`
 - **Detail:**
   - Phases 2 to 4 sit on one branch off `main` after PR 1 merges, and that branch becomes PR 2. Commit at the end of each phase at minimum, formatted with `dart format` and clean under `flutter analyze`, so the gate's diff in Phase 5 is test additions and not whitespace.
@@ -307,13 +381,152 @@ One plan-specific fact: both the `dart` and `very-good-cli` MCP servers failed t
 - **Acceptance criteria:** Every class carrying `Equatable` has a test file asserting value equality and its own behaviour; enums and extension types get a test only where they carry behaviour. The policy document names all eight decided values plus the per-metric sigma floor and the window as a count, each with a reason, and states what a false negative costs against a false positive.
 - **Validation:** `cd app && flutter test test/domain`, in a terminal. Fast loop, not the gate: any `very_good test` in `app/` reads `very_good.yaml` and is the full gate, scoped or not. See Phase 5. Commit when green.
 
+<details>
+<summary><strong>The Dart constructs Phase 2 introduces.</strong> The spec above owns the fields; this owns the language.</summary>
+
+The snippets use throwaway types on purpose. The syntax transfers and nothing here can be retyped into `app/lib/domain/`. Phase 1's collapsed block has the lint list these forms satisfy.
+
+**1. A value class with `Equatable`.**
+
+```dart
+class Book extends Equatable {
+  const new({required this.id, this.format = Format.paperback});
+
+  final BookId id;
+  final Format format;
+
+  @override
+  List<Object?> get props => [id, format];
+}
+```
+
+Every field `final`, the constructor `const`, equality by content. This is the shape of every domain type in this phase.
+
+Dart classes compare by identity, unlike a Swift `struct`, so value semantics are opt-in. `Equatable` generates `==` and `hashCode` from `props`. Every field goes in `props`, and forgetting one is the classic bug, which is why each class gets an equality test rather than a smoke test. `{required this.id, this.format = ...}` are named parameters: `required` makes one mandatory, a default makes it optional, and `this.id` is an initializing formal that assigns the field with no constructor body at all. Note that `new` is only how the constructor is **declared**. Call sites still read `Book(id: ...)`.
+
+**2. An `enum`, plain and carrying a field.**
+
+```dart
+enum Format { paperback, hardback, audio }
+
+enum Shelf {
+  fiction(capacity: 40),
+  reference(capacity: 12);
+
+  new({required this.capacity});
+
+  final int capacity;
+}
+```
+
+A closed set of named values. Dart enums are full classes: they can carry fields, methods and a constructor, though every value is declared in the body, and `Shelf.values` lists them all. Carrying the per-metric sigma floor on `Metric` this way means the evaluator asks `metric.sigmaFloor` rather than looking it up in a map that could miss a key. This is a Swift enum with stored values, minus associated values; for those, see sealed classes below. An enum gets a test only where it carries behaviour, so `Severity` gets one and `HiveStatus` does not.
+
+**3. An `extension type` for ids.**
+
+```dart
+extension type const BookId(String value);
+```
+
+A compile-time wrapper. At runtime it *is* the `String` it wraps, with no allocation. At compile time it is a distinct type, so a function taking a `BookId` will not accept a `ShelfId` or a bare `String`. Equality is the wrapped value's, so it needs no `Equatable`. Two ids that are both strings get mixed up; two ids that are different types cannot be. This is `HiveId` and `AlertId`.
+
+**4. A record for values that travel together.**
+
+```dart
+typedef Span = ({int first, int last});
+
+const span = (first: 3, last: 9);
+span.first;
+```
+
+An anonymous, immutable bundle of named fields with structural equality built in. The `typedef` gives the shape a name so signatures read well. A Swift named tuple, with equality. Two values that always travel together and mean nothing apart are a record; a class would add a name and a file for no gain. This is the anomaly's magnitude-and-duration pair.
+
+**5. A sealed class, switched exhaustively.**
+
+```dart
+sealed class Lookup extends Equatable {
+  const new();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class Found extends Lookup {
+  const new(this.book);
+
+  final Book book;
+
+  @override
+  List<Object?> get props => [book];
+}
+
+final class Missing extends Lookup {
+  const new();
+}
+
+final class Unindexed extends Lookup {
+  const new();
+}
+```
+
+A `sealed` class can only be extended in its own file, so the compiler knows the complete set of subtypes and a `switch` over one must cover every case or fail to analyze. Add a fourth variant and every switch that forgot it stops compiling, which is the property the whole plan leans on. `final class` on each subtype means nothing can extend it further.
+
+```dart
+switch (lookup) {
+  case Found(:final book):
+    // `:final book` destructures the field out. This is pattern matching.
+  case Missing():
+  case Unindexed():
+}
+```
+
+A Swift enum with associated values, switched exhaustively. This is `EvaluationResult` and every Bloc state. Three outcomes rather than "a value or null", because the third one, not judged, must never be mistaken for the second, fine.
+
+**6. A table as a static method on the enum.**
+
+```dart
+enum Grade {
+  low, medium, high;
+
+  static Grade of(Span span) {
+    final length = span.last - span.first;
+    if (length >= 6) return Grade.high;
+    if (length >= 3) return Grade.medium;
+    return Grade.low;
+  }
+}
+```
+
+One dimension here. `Severity` has two, magnitude tier by duration tier, nine cells. Write it as a lookup a person can read rather than arithmetic that happens to land on the right answer, and write nine tests, one per cell. A static method keeps the rule next to the values it produces.
+
+**7. A pure Dart test.**
+
+```dart
+void main() {
+  group(Book, () {
+    test('is equal to another book with the same fields', () {
+      const a = Book(id: BookId('b-1'));
+      const b = Book(id: BookId('b-1'));
+      expect(a, equals(b));
+    });
+  });
+}
+```
+
+- `group(Book, ...)` takes the type, not a string, so a rename is caught by the analyzer.
+- Names read as a sentence down the hierarchy: "Book is equal to another book with the same fields".
+- `expect(actual, matcher)`. The matchers this plan needs: `equals`, `isNot`, `isA<T>()`, `closeTo(value, delta)` for doubles, `isEmpty`, `hasLength(n)`, `everyElement(m)`.
+- Domain tests in `app/` import `package:flutter_test/flutter_test.dart`, which re-exports the same API as `package:test`, and they run in milliseconds because no widget is involved.
+- `flutter test test/domain` runs the folder without the coverage gate.
+
+</details>
+
 ### Phase 3: The baseline evaluator
 
 - **Status:** Not started
-- **Owner:** **Jamie, by hand. No agent touches these files.**
+- **Owner:** **Jamie, by hand, against the constructs block at the end of this phase. No agent writes these files.**
 - **Scope:** The evaluator: a fold over one hive's readings for one metric, carrying its state from reading to reading, emitting an `EvaluationResult` per reading.
 - **Earns:** A sealed `EvaluationResult` switched exhaustively, a stateful fold tested edge by edge and cell by cell against a written policy rather than against the code, and the first passing bear test.
-- **Read first:** decisions 1 to 6, the bold paragraphs after the table through the sigma floor, the severity table, and the `EvaluationResult` block under State shape.
+- **Read first:** decisions 1 to 6, the bold paragraphs after the table through the sigma floor, the severity table, the `EvaluationResult` block under State shape, and the collapsed constructs block at the end of this phase.
 - **Files touched:** `app/lib/domain/evaluator.dart`, `app/lib/domain/baseline.dart`, `app/lib/domain/candidate_causes.dart`, `app/test/domain/evaluator_test.dart`, `app/test/domain/baseline_test.dart`, `app/test/domain/candidate_causes_test.dart`
 - **Detail:**
   - The rolling window computes mean and standard deviation over the hive's own readings for that metric. Per hive, per metric. No peers, no calendar. Band at `k = 3.0` out and `k = 2.5` back, N of 3, cadence 15 minutes, minimum history half the window. Severity from the nine-cell table.
@@ -324,6 +537,117 @@ One plan-specific fact: both the `dart` and `very-good-cli` MCP servers failed t
   - Tests cover the policy edges explicitly and by name: a value hovering at the band edge does not flap, `N - 1` consecutive breaches raise nothing, the Nth raises, a gap longer than twice the cadence resets the counter, a hive below the minimum sample count returns `InsufficientHistory` rather than `WithinBand`, **a metric whose window sigma is zero uses the floor rather than dividing by it**, **an anomalous reading does not enter the baseline the next reading is judged against**, **a long excursion does not drain the window into `InsufficientHistory`**, and severity for each of the nine cells.
 - **Acceptance criteria:** Each named case in the detail list above exists as a test: band-edge flap, `N - 1` raises nothing, `N` raises, the gap reset, below minimum history, the zero-sigma floor, the contaminated-baseline case, the window drain, and all nine severity cells. Seventeen cases minimum. The cause-ranking test the success criteria call by name is `ranks bear above swarm when tilt accompanies the weight drop`, in `app/test/domain/`.
 - **Validation:** `cd app && flutter test test/domain`, in a terminal. Fast loop, not the gate. Commit when green.
+
+<details>
+<summary><strong>The Dart constructs Phase 3 introduces.</strong> The spec above owns the policy; this owns the language.</summary>
+
+Throwaway types again, and the fold below is a skeleton with every branch left out, because the branches are the spec above.
+
+**A fold as an object, because it carries state.** Each rule is a constructor parameter with a default, so a test can shrink the numbers and keep its fixture on one screen while production keeps the plan's values.
+
+```dart
+class RollingCheck {
+  new({
+    required this.floor,
+    this.window = 8,
+    this.minimumHistory = 4,
+    this.breachSigma = 3,
+    this.clearSigma = 2.5,
+    this.consecutive = 2,
+    this.cadence = const Duration(minutes: 1),
+  });
+
+  final double floor;
+  final int window;
+  final int minimumHistory;
+  final double breachSigma;
+  final double clearSigma;
+  final int consecutive;
+  final Duration cadence;
+
+  final List<double> _inBand = [];
+  int _streak = 0;
+  bool _open = false;
+  DateTime? _previousAt;
+  late DateTime _startedAt;
+
+  Verdict check(DateTime at, double value) {
+    // one branch per rule, in the order the spec above lists them
+  }
+}
+```
+
+This constructor is not `const` and cannot be, because the object mutates. The private fields are the carried state, one per rule that needs it: the consecutive count, whether a run is open, and the previous timestamp for the gap rule. `DateTime? _previousAt` starts null because there is no previous reading on the first call, and `previousAt != null` is the guard that expresses "first reading" without a second flag. `late DateTime _startedAt` is safe only because the branch that sets it always runs before the branch that reads it; if a restructure breaks that ordering, make it nullable and check instead of arguing with the analyzer.
+
+**Window statistics, and the floor.**
+
+```dart
+final mean = _inBand.reduce((a, b) => a + b) / _inBand.length;
+final variance =
+    _inBand.map((v) => (v - mean) * (v - mean)).reduce((a, b) => a + b) /
+    _inBand.length;
+final sigma = max(sqrt(variance), floor);
+final magnitude = (value - mean) / sigma;
+```
+
+`max(..., floor)` is the entire sigma-floor rule, one line. `max` and `sqrt` come from `dart:math`. `reduce` throws on an empty list, so the minimum-history guard has to run before this and the order is load-bearing. `magnitude` keeps its sign, because cause ranking reads direction.
+
+**Only an in-band reading enters the window.**
+
+```dart
+void _admit(double value) {
+  _inBand.add(value);
+  if (_inBand.length > window) _inBand.removeAt(0);
+}
+```
+
+The window is a count, not a duration, so it never drains however long an excursion runs. Readings judged `InsufficientHistory` are admitted, or the window never fills. Readings judged anomalous are not, or an excursion contaminates the baseline the next reading is judged against. Those are two of the named tests.
+
+**Reading a sealed result in a test.**
+
+```dart
+final result = check.check(at, 117.5);
+expect(result, isA<Found>());
+final book = (result as Found).book;
+expect(book.id, equals(const BookId('b-1')));
+```
+
+`isA<T>()` asserts the variant, `as` casts once the variant is known. For a double carried on a variant, `closeTo(3.75, 0.001)`. Never `equals` on a double.
+
+**A set score over enum-declared predictions.**
+
+```dart
+enum Signal { aUp, bDown, cUp }
+
+enum Guess {
+  first({Signal.aUp, Signal.bDown, Signal.cUp}),
+  second({Signal.bDown});
+
+  new(this.predicts);
+
+  final Set<Signal> predicts;
+}
+
+List<(Guess, double)> rank(Set<Signal> observed) {
+  final scored = [
+    for (final guess in Guess.values)
+      (
+        guess,
+        guess.predicts.intersection(observed).length /
+            guess.predicts.union(observed).length,
+      ),
+  ];
+  return scored..sort((a, b) => b.$2.compareTo(a.$2));
+}
+```
+
+- A `Set` literal `{...}` on each enum value declares what that value predicts. `intersection` and `union` are `Set` methods, so the score is two calls and a division.
+- `(Guess, double)` is a **positional** record; `.$1` and `.$2` read its fields. The named form in Phase 2 and this one are the same feature.
+- `[for (...) ...]` is a collection-for, which builds a list inline instead of a `map().toList()` round trip.
+- Matched over union, not matched over predicted, which is the arithmetic the spec above requires: a guess loses points for predicting what did not happen as well as gaining them for explaining what did.
+- `..` is a cascade. `sort` returns void and sorts in place, so the cascade sorts the list and yields the list.
+
+</details>
 
 <details>
 <summary><strong>Hints for Phase 3. Open only if stuck.</strong> The spec above is complete without them.</summary>
@@ -338,10 +662,10 @@ One plan-specific fact: both the `dart` and `very-good-cli` MCP servers failed t
 ### Phase 4: `AlertInboxBloc`, hand-written
 
 - **Status:** Not started
-- **Owner:** **Jamie, by hand. No agent touches these files.**
+- **Owner:** **Jamie, by hand, against the constructs block at the end of this phase. No agent writes these files.**
 - **Scope:** The reading generator, the repository that evaluates it, and `AlertInboxBloc` with its `blocTest` cases. Committed before any gate runs. Ends the hand-written half of PR 2.
 - **Earns:** The Bloc pattern from the inside: events in, states out, one handler where the logic lives, and `blocTest()` as the trail of that. `mocktail` on a concrete class. A repository that takes its dependency through the constructor and holds no Flutter import, as the one place arithmetic becomes a decision. Declarative fixtures, where a wrong alert is a wrong spec. The bear as one alert carrying four signals.
-- **Read first:** State shape in full, decision 7 for the three sort keys, The seed holds readings, and The repository has no abstraction yet. Then the template's own examples, which PR 2 still carries: `app/test/counter/cubit/counter_cubit_test.dart` for the `blocTest` shape, `app/test/counter/view/counter_page_test.dart` for a private `MockCubit` with `late` and `setUp` inside a group, and `app/lib/counter/counter.dart` for the barrel. Then the plugin's `bloc` skill, its `references/testing.md` for the `blocTest` parameter table, and the `testing` skill. That reference's Bloc example puts `setUp` outside a group and names its mock without an underscore; the rules below win.
+- **Read first:** the collapsed constructs block at the end of this phase, State shape in full, decision 7 for the three sort keys, The seed holds readings, and The repository has no abstraction yet. Then the template's own examples, which PR 2 still carries: `app/test/counter/cubit/counter_cubit_test.dart` for the `blocTest` shape, `app/test/counter/view/counter_page_test.dart` for a private `MockCubit` with `late` and `setUp` inside a group, and `app/lib/counter/counter.dart` for the barrel. Then the plugin's `bloc` skill, its `references/testing.md` for the `blocTest` parameter table, and the `testing` skill. That reference's Bloc example puts `setUp` outside a group and names its mock without an underscore; the rules below win.
 - **Files touched:** `app/lib/repositories/seed_readings.dart`, `app/lib/repositories/alert_repository.dart`, `app/lib/alert_inbox/bloc/*.dart`, `app/lib/alert_inbox/alert_inbox.dart`, `app/test/repositories/seed_readings_test.dart`, `app/test/repositories/alert_repository_test.dart`, `app/test/alert_inbox/bloc/alert_inbox_bloc_test.dart`
 - **Detail:**
   - `seed_readings.dart` takes excursion specs, each naming a hive, a metric, a start time, a magnitude in sigma and a duration in readings, and generates the reading series around them. No literals. The quiet series is noise from a fixed-seed generator, so it is reproducible, and the evaluator's sample sigma over 672 readings lands within a few percent of the generator's, not on it. So **specs sit in the middle of a tier, never on an edge**: 3.75, 5.25 and 7.5 sigma for near, far and extreme, and 4, 8 and 14 readings for brief, sustained and prolonged. A spec at exactly 6.0 would land on either side of the tier line from run to run and the test that derives severity from the spec would flake. A flat noise-free baseline was considered, since it makes the floor the sigma and the arithmetic exact, and rejected because the same generator feeds the development flavor and a flat chart in slice two would look like the fake it is.
@@ -360,6 +684,148 @@ One plan-specific fact: both the `dart` and `very-good-cli` MCP servers failed t
   - **Commit this phase before Phase 5 runs.** The commit boundary is the evidence.
 - **Acceptance criteria:** `blocTest` cases cover load success, empty result, failure and the full three-key sort including the tie-break. **Five tests carry exact names, because success criteria call them by name:** `orders by severity then raised-at then id`, `derives severity from the excursion spec`, `raises nothing for a hive below the minimum history`, `collapses one excursion into one alert`, and `collapses a four-metric bear into one alert`. The commit exists before the first gate run, and Phases 2, 3 and 4 read `Done` in this file in that commit.
 - **Validation:** `cd app && flutter test test/alert_inbox test/repositories`, in a terminal. Fast loop, not the gate. Commit when green.
+
+<details>
+<summary><strong>The Dart constructs Phase 4 introduces.</strong> The spec above owns the behaviour; this owns the language.</summary>
+
+**A repository: one concrete class, dependencies in through the constructor.**
+
+```dart
+class ThingRepository {
+  new({required this.things, required this.checks});
+
+  final List<Thing> things;
+  final List<Check> checks;
+
+  Future<List<Result>> fetchResults() async {
+    // ...
+  }
+}
+```
+
+`required this.things` is an initializing formal, so nothing is constructed inside and a test passes fixtures in. No interface: one implementation exists, and `mocktail` mocks a concrete class, so testability is not a reason to add one. No Flutter import, so the layer stays pure Dart. `Future` and `async`/`await` map one to one from Swift. `bloc_lint`'s `avoid_public_fields` applies to Blocs and not to repositories, so public `final` fields are fine here; make them `required this._things` when no test needs to read them back.
+
+**Collapsing a per-reading result into runs.** A nullable local is the whole trick.
+
+```dart
+Run? open;
+for (final reading in series) {
+  switch (evaluate(reading)) {
+    case Breached(:final run):
+      open = open == null ? run : open.extend(run);
+    case Quiet():
+      if (open != null) results.add(promote(open));
+      open = null;
+    case Warming():
+      break;
+  }
+}
+if (open != null) results.add(promote(open));
+```
+
+`Run? open`, where `null` means no run is in progress, and the ternary is the merge decision. Dart also has `open?.field` for null-aware access and `?? fallback` for a default when null, both of which shorten the accumulation once `Run` carries more than one field. A run ends on the first quiet reading, and **a run still open when the series ends is closed after the loop**, which is the case that is easy to forget and produces a missing alert rather than a wrong one. The `switch` is exhaustive over the sealed result, so the third variant is listed even to do nothing with it. This is the first of the two collapse stages; the second, merging runs open at the same time on one hive across metrics, is the spec above and is not a Dart construct.
+
+**A Bloc: events in, states out, one handler each.**
+
+```dart
+class ThingBloc extends Bloc<ThingEvent, ThingState> {
+  new({required this._repository}) : super(const ThingLoading()) {
+    on<ThingLoadRequested>(_onLoadRequested);
+  }
+
+  final ThingRepository _repository;
+
+  Future<void> _onLoadRequested(
+    ThingLoadRequested event,
+    Emitter<ThingState> emit,
+  ) async {
+    emit(const ThingLoading());
+    try {
+      emit(ThingLoaded(_ordered(await _repository.fetchResults())));
+    } on Exception {
+      emit(const ThingLoadFailure());
+    }
+  }
+}
+```
+
+`required this._repository` works even alongside the `super` call, and the initializer-list spelling that assigns a plain parameter to the field trips `prefer_initializing_formals`. `super(const ThingLoading())` sets the initial state. `on<Event>(handler)` registers one handler per event type, and because the event class is sealed, the registrations are the complete list. The handler `emit`s in order and a `blocTest` asserts that exact sequence. `on Exception` catches only `Exception` subtypes and never a programming error, and `avoid_catches_without_on_clauses` makes the clause mandatory anyway.
+
+**Events and states are `part of` the Bloc file**, so they share its imports. States are nouns, events are past-tense facts. Both sealed, both `Equatable`.
+
+```dart
+sealed class ThingState extends Equatable {
+  const new();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class ThingLoading extends ThingState {
+  const new();
+}
+
+final class ThingLoaded extends ThingState {
+  const new(this.results);
+
+  final List<Result> results;
+
+  @override
+  List<Object?> get props => [results];
+}
+
+final class ThingLoadFailure extends ThingState {
+  const new();
+}
+```
+
+No `Empty` variant. An empty inbox is `Loaded` carrying an empty list, which is what lets the UI switch on three cases rather than four.
+
+**A total order, applied once, where the state is built.**
+
+```dart
+static List<Result> _ordered(List<Result> results) {
+  return [...results]..sort((a, b) {
+    final byGrade = b.grade.index.compareTo(a.grade.index);
+    if (byGrade != 0) return byGrade;
+    final byTime = b.at.compareTo(a.at);
+    if (byTime != 0) return byTime;
+    return a.id.value.compareTo(b.id.value);
+  });
+}
+```
+
+`[...results]` is a spread that copies the list, because `sort` is in place and the input must not be mutated. `b` before `a` is descending; `a` before `b` is ascending. Three keys ending in a unique one means any two items order the same way on every run, so no widget test can flake on it. The state carries the ordered list and the widget never sorts.
+
+**`blocTest` and `mocktail`.**
+
+```dart
+class _MockThingRepository extends Mock implements ThingRepository;
+
+late ThingRepository repository;
+
+setUp(() {
+  repository = _MockThingRepository();
+});
+
+blocTest<ThingBloc, ThingState>(
+  'emits failure when the repository throws',
+  setUp: () {
+    when(() => repository.fetchResults()).thenThrow(Exception('down'));
+  },
+  build: () => ThingBloc(repository: repository),
+  act: (bloc) => bloc.add(const ThingLoadRequested()),
+  expect: () => const [ThingLoading(), ThingLoadFailure()],
+);
+```
+
+- The mock is one line: extend `Mock`, implement the concrete class, and end with a `;` rather than `{}`, per `empty_container_bodies`. Private, underscore-prefixed, one per file.
+- `when(() => repository.method()).thenAnswer((_) async => value)` stubs an async method, `thenThrow` covers the failure path. The closure is required: `when` takes a callback, not a call. Stub inside each case's own `setUp:` so every case states its own world.
+- `build` creates the Bloc, `act` adds the event, and `expect` is the exact ordered list of states emitted **after** `act`. The initial state is not in that list.
+- `late` plus `setUp` inside the group, so every case gets a fresh mock.
+- `expect` compares with `==`, so every state and everything inside it must come through `Equatable`. A `List` field compares element by element through `props`; a `Map` does not.
+
+</details>
 
 <details>
 <summary><strong>Hints for Phase 4. Open only if stuck.</strong> The spec above is complete without them.</summary>
