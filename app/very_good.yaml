@@ -1,0 +1,11 @@
+# Defaults for `very_good test`, so a bare run inside app/ is the real gate.
+# CI cannot read this file (the reusable workflow passes explicit flags), so
+# .github/workflows/main.yaml repeats every value. Keep the two in step.
+test:
+  coverage: true
+  min_coverage: "100"
+  collect_coverage_from: all
+  show_uncovered: true
+  # Every lib/ file counts under `all`. Codegen (.g.dart, l10n gen) and the
+  # entry points no test can load (main_*.dart, bootstrap.dart) are excluded.
+  exclude_coverage: "**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart"
