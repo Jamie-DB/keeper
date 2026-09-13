@@ -29,10 +29,10 @@ Bloc, not Cubit, wherever the event-to-state trail is worth having. Cubit only w
 `mocktail`, never `mockito`. `blocTest()` for every Bloc, never raw `test()` with manual stream assertions. Private mocks per file, underscore-prefixed. Test names read as sentences down the group hierarchy. `setUp` and `tearDown` live inside a group. Mutable objects are `late` and assigned in `setUp`. Widget tests go through the shared `pumpApp` helper, never an inline `pumpWidget(MaterialApp(...))`.
 
 ```
-very_good test --coverage --min-coverage 100 --exclude-coverage '**/*.g.dart' --collect-coverage-from all
+very_good test --coverage --min-coverage 100 --collect-coverage-from all --exclude-coverage '**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart'
 ```
 
-The exclusion is not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever. `--collect-coverage-from all` is not optional either. The default is `imports`, which leaves any `lib/` file no test imports out of the denominator, so a gate can pass over a file it never measured.
+`app/very_good.yaml` holds the same values, so a bare `very_good test` inside `app/` is the same gate. The exclusions are not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever. `--collect-coverage-from all` is not optional either. The default is `imports`, which leaves any `lib/` file no test imports out of the denominator, so a gate can pass over a file it never measured. Under `all` every unloaded `lib/` file counts at zero, which is why the l10n output and the three entry points are named: the untouched scaffold reads 27 percent without them and 100 with them (verified Sep 13, 2026). CI ignores `very_good.yaml` and takes the same values as workflow inputs, so the two must be kept in step by hand.
 
 ## Commands and flavors
 
@@ -62,3 +62,4 @@ One issue per slice with a checklist, evidence in comments. Every slice merges t
 2. [DOMAIN] Never reintroduce `YardConditions`, an evaluator weather parameter, or `Season`, because they were cut on Sep 11, 2026 for having no caller. The build plan and the brainstorm both argue to keep the parameter and both are overridden. Cause ranking keys on signals alone, with no calendar anywhere in the domain.
 3. [DOMAIN] An alert is a hive incident, never a metric excursion, because correlated signals across metrics are what let a bear outrank a swarm in the candidate causes. Runs open at the same time on one hive collapse into one alert carrying every signal. The build plan's bear scenario asks for four alerts on one hive and is overridden.
 4. [REVIEW] Audit a design document by tracing data paths and cross-phase dependencies, not by reading prose, because every defect found in this plan came from following data and none came from reading.
+5. [STYLE] Always keep chat replies brief: lead with the outcome, then only what is important or actionable now, in bullets where that aids scanning, because Jamie is juggling several workspace threads and unread detail costs more than a follow-up question. Reasoning and verification go in the PR body or the docs, not the chat (Jamie, Sep 13, 2026).

@@ -1,0 +1,38 @@
+name: keeper
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  semantic-pull-request:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
+
+  build:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      working_directory: app
+      flutter_version: "3.47.x"
+      run_bloc_lint: true
+      min_coverage: 100
+      collect_coverage_from: all
+      # Every lib/ file counts, so files no test can load are named here rather
+      # than silently dropped. Codegen (.g.dart, l10n gen) and the entry points
+      # (main_*.dart, bootstrap.dart) are the only exclusions.
+      coverage_excludes: "**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart"
+
+  spell-check:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
+    with:
+      includes: |
+        README.md
+        app/**/*.md
+      modified_files_only: false
