@@ -25,3 +25,7 @@ jobs:
       working_directory: app
       flutter_version: "3.47.x"
       allowed: "MIT,BSD-3-Clause,BSD-2-Clause,Apache-2.0"
+      # pubspec_lock_parse is Apache-2.0 in its LICENSE file (checked in the
+      # pub cache, Sep 13, 2026) but pub.dev reports it as unknown, which the
+      # check reads as banned. Transitive via bloc_tools.
+      skip_packages: "pubspec_lock_parse"
