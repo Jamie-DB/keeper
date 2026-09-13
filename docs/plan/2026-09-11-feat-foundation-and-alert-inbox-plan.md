@@ -992,6 +992,8 @@ The first three exist to keep the wall-clock number honest. A generation time on
 
 Slice two records the denominator, extracts `packages/hive_domain/` and times it, introduces the data layer with a second repository implementation and times that too, then builds the simulator's GraphQL read side with a hand-rolled `shelf` handler and a hand-written `schema.graphql`.
 
+**The extraction takes four CI changes with it.** Deferred here from PR 1's `/review`, findings 7 and 8 in `docs/code-review/keeper-status-bootstrap/review.md`. Every gate in the repository points at `app/` alone, so the first package under `packages/` would ship with no gate at all: `main.yaml` needs a build job or a matrix over `packages/*`, `license_check.yaml` needs `packages/*/pubspec.yaml` in both `paths` lists, `dependabot.yaml` needs a `pub` entry per package, and the spell-check job needs `packages/**/*.md` in `includes`. They sit here rather than in an issue because the extraction is what triggers them and this is the document `/build` reads.
+
 The sync contract's eight decisions are written before slice three, because decision 1 puts a client-minted id on every `TriageAction` and that type is written in slice three. `TriageAction` carries its id from the moment the type is first written. Retrofitting ids onto a type with call sites and tests is the avoidable version of that work.
 
 Slice four puts the debounced `restartable` search on `AlertInboxBloc`, which is the reason it is a Bloc rather than a Cubit.
