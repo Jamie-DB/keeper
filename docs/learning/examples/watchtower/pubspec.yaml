@@ -1,0 +1,17 @@
+name: watchtower
+description: Throwaway package that compile-checks the keeper learning examples.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  bloc: ^9.2.1
+  equatable: ^2.1.0
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.5
+  test: ^1.25.0
+  very_good_analysis: ^11.0.0
