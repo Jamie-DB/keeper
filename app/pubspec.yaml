@@ -1,5 +1,5 @@
 name: keeper
-description: A Very Good Project created by Very Good CLI.
+description: Hive monitoring for a beekeeping operation, from sensor alert to yard visit.
 version: 1.0.0+1
 publish_to: none
 

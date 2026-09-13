@@ -7,9 +7,6 @@ analyzer:
     - build/**
     - android/**
     - ios/**
-    - web/**
-    - windows/**
-    - macos/**
 linter:
   rules:
     public_member_api_docs: false

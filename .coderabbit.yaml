@@ -1,11 +1,7 @@
-# CodeRabbit skips any pull request over 100 files. The Flutter scaffold
-# carries 160 platform files under app/ that nobody hand-edits, so they are
-# excluded and the Dart, CI and docs are what get reviewed.
+# CodeRabbit skips any pull request over 100 files. The iOS and Android
+# runners are generated platform files nobody hand-edits, so they are excluded
+# and the Dart, CI and docs are what get reviewed.
 reviews:
   path_filters:
     - "!app/ios/**"
     - "!app/android/**"
-    - "!app/macos/**"
-    - "!app/windows/**"
-    - "!app/linux/**"
-    - "!app/web/**"

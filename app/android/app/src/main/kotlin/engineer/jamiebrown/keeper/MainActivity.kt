@@ -1,4 +1,4 @@
-package com.example.verygoodcore.keeper
+package engineer.jamiebrown.keeper
 
 import io.flutter.embedding.android.FlutterActivity
 

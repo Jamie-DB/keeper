@@ -34,5 +34,4 @@ jobs:
     with:
       includes: |
         README.md
-        app/**/*.md
       modified_files_only: false
