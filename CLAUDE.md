@@ -32,7 +32,7 @@ Bloc, not Cubit, wherever the event-to-state trail is worth having. Cubit only w
 very_good test --coverage --min-coverage 100 --exclude-coverage '**/*.g.dart **/l10n/gen/*.dart **/main_*.dart **/bootstrap.dart' --collect-coverage-from all
 ```
 
-The exclusion is not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever. `--collect-coverage-from all` is not optional either. The default is `imports`, which leaves any `lib/` file no test imports out of the denominator, so a gate can pass over a file it never measured. Under `all` the l10n output and the entry points must be excluded too, or the gate re-adds them at zero and the untouched scaffold fails. `app/very_good.yaml` carries the same settings, so a bare `very_good test` in `app/` is the gate, including through the MCP tool, which has no `--collect-coverage-from` flag.
+The exclusion is not optional. Drift and GraphQL codegen both emit `.g.dart` and the gate will chase them forever. `--collect-coverage-from all` is not optional either. The default is `imports`, which leaves any `lib/` file no test imports out of the denominator, so a gate can pass over a file it never measured. Under `all` the l10n output and the entry points must be excluded too, or the gate re-adds them at zero and the untouched scaffold fails. `app/very_good.yaml` carries the same settings, so a bare `very_good test` in `app/` is the gate, including through the MCP tool, which has no `--collect-coverage-from` flag. That includes scoped runs, so fast loops use `flutter test <path>` in a terminal. `/green-gate` passes its own `exclude_coverage` default, which replaces the file's list, so invoke it with the four globs above stated in the request.
 
 ## Commands and flavors
 
