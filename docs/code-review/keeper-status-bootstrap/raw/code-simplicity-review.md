@@ -1,5 +1,7 @@
 # Code Simplicity Review — keeper-status-bootstrap vs origin/main
 
+> _Report as delivered Sep 13, 2026. Not maintained against later code; dispositions are in the README comparison row. See the caveat in [`../review.md`](../review.md)._
+
 ## Core Purpose
 This branch bootstraps the repository's tooling: a Very Good CLI Flutter scaffold under `app/`, CI workflows (build, license check, spell check, dependabot), CodeRabbit configuration, and a status update to the foundation plan document. It is infrastructure, not application logic.
 

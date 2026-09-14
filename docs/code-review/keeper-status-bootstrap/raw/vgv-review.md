@@ -1,5 +1,7 @@
 # VGV Code Review: keeper-status-bootstrap vs origin/main
 
+> _Report as delivered Sep 13, 2026. Not maintained against later code; dispositions are in the README comparison row. See the caveat in [`../review.md`](../review.md)._
+
 Branch: `keeper-status-bootstrap` (PR 6). Scope: root CI and config files, `app/` non-platform files, README, CLAUDE.md, the plan. Platform directories excluded per the task. The counter feature's existence is out of scope by instruction.
 
 ## Summary

@@ -350,7 +350,7 @@ Three ways a widget talks to a Bloc, all three in that one file: `context.select
 - `extension` adds methods to an existing type, and you have already read two: `pump_app.dart` and `l10n.dart`. `extension type` is a different feature: a zero-cost wrapper that gives an existing value a new static type. That one arrives in Phase 2, twice, as `HiveId` and `AlertId`.
 - `part` and `part of` split one library across files. The Bloc convention uses them so the event and state files share the Bloc's imports rather than repeating them.
 - `Future<void> main() async` is an async entry point, and `await` works as it does in Swift. Isolates do not map to Swift concurrency, because there is no shared memory, and nothing in this plan needs one.
-- A file starting with `// dart format off` or `// coverage:ignore-file` is generated. Edit its source and regenerate.
+- `// dart format off` and `// coverage:ignore-file` opt a file out of formatting and out of the coverage record. Generated output often carries them, but neither proves a file is generated, so go by the path rather than the header. The only generated output in this repository is `lib/l10n/gen/`, written from `app_en.arb`: edit the ARB and regenerate, never the output.
 
 **Five lints that fire on code most tutorials would call idiomatic**, because Dart 3.13 added a shorter constructor syntax and `very_good_analysis` 11 prefers it. Each was confirmed by writing both forms and analyzing them, and the first two will land on the first file Phase 2 writes.
 
@@ -469,7 +469,7 @@ final class Unindexed extends Lookup {
 }
 ```
 
-A `sealed` class can only be extended in its own file, so the compiler knows the complete set of subtypes and a `switch` over one must cover every case or fail to analyze. Add a fourth variant and every switch that forgot it stops compiling, which is the property the whole plan leans on. `final class` on each subtype means nothing can extend it further.
+A `sealed` class can only be extended inside its own **library**, so the compiler knows the complete set of subtypes and a `switch` over one must cover every case or fail to analyze. A library is usually one file, but `part` and `part of` spread one library across several, which is how Phase 4's sealed states sit in their own file and still count as the Bloc's library. Add a fourth variant and every switch that forgot it stops compiling, which is the property the whole plan leans on. `final class` on each subtype means nothing can extend it further.
 
 ```dart
 switch (lookup) {

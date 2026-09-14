@@ -1,5 +1,7 @@
 # Test Quality Review
 
+> _Report as delivered Sep 13, 2026. Not maintained against later code; dispositions are in the README comparison row. See the caveat in [`../review.md`](../review.md)._
+
 Branch: `keeper-status-bootstrap` vs `origin/main`
 Scope: root CI/config files, `app/very_good.yaml`, `app/pubspec.yaml`, the scaffold's own test suite, and the plan doc. Platform directories excluded per instructions.
 

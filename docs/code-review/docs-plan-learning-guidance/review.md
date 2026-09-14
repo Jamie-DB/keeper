@@ -5,7 +5,7 @@
 **Agents**: `vgv-review-agent`, `architecture-review-agent`, `test-quality-review-agent`, `code-simplicity-review-agent`. All four completed.
 
 **Critical**: 2 | **Important**: 11 | **Suggestion**: 9 · 22 findings from 27 agent reports after deduplication.
-**Applied Sep 13, 2026**: 16 of 22, in three passes. The two Criticals and the `Equatable` claim first; then the eight false or self-contradicting statements this branch had introduced; then the four design calls, each decided by Jamie rather than absorbed into a cleanup.
+**Applied Sep 13, 2026**: 16 of 22, in three passes of 4, 8 and 4. First the two Criticals (FINDING-01 and 02) with the Phase 3 assertion snippet (FINDING-09) and the `Equatable` claim (FINDING-11); then the eight false or self-contradicting statements this branch had introduced (FINDING-04, 05, 06, 07, 12, 13, 18 and 21); then the four design calls (FINDING-03, 08, 10 and 20), each decided by Jamie rather than absorbed into a cleanup.
 
 **Deferred, 6**: FINDING-14, 15, 16, 17, 19 and 22. Duplication and precision items with no correctness cost, left for the next plan pass. They are open, not silently dropped.
 
@@ -13,7 +13,7 @@
 
 The plan requires all three reviewers to report on one commit, or the comparison table compares three different diffs. That did not happen on this branch and the record should say so plainly.
 
-`/review` ran on the branch's second commit, the one that committed PR 1's report. Twelve of its findings were then fixed across the next two commits, the first covering the two Criticals plus the `Equatable` claim, the second the eight false or self-contradicting statements this branch had introduced. `flutter-reviewer` and CodeRabbit therefore see a later commit than `/review` did, with twelve findings already closed.
+`/review` ran on the branch's second commit, the one that committed PR 1's report. Twelve of its findings were then fixed across the next two commits, four in the first (the two Criticals, the Phase 3 assertion snippet and the `Equatable` claim) and eight in the second (the false or self-contradicting statements this branch had introduced). `flutter-reviewer` and CodeRabbit therefore see a later commit than `/review` did, with twelve findings already closed.
 
 Two consequences for any comparison row written from this branch. First, silence from the other two reviewers on anything in this list is not agreement, it is a diff that no longer contains the defect. Second, `/review` had the advantage of going first on unreviewed text, which is the likeliest explanation for the count, and a row that reports 22 against their totals without saying so would be misleading. The order is worth keeping for future pull requests: reviewing before fixing is what makes the columns comparable, and this branch is the counter-example.
 

@@ -1,5 +1,7 @@
 ## Architecture Review
 
+> _Report as delivered Sep 13, 2026. Not maintained against later code; dispositions are in the README comparison row. See the caveat in [`../review.md`](../review.md)._
+
 Branch `keeper-status-bootstrap` against `origin/main`, Sep 13, 2026. Scope: the Dart under `app/lib` and `app/test`, the app config, the root CI files, README, CLAUDE.md and the plan. Platform directories excluded by instruction.
 
 **Method.** Scaffolded a throwaway `very_good create flutter_app keeper` (CLI 1.5.0) into `/tmp` and diffed it against `app/`. `lib/`, `test/`, `pubspec.yaml`, `analysis_options.yaml`, `l10n.yaml`, `.vscode/`, `.idea/` and `.metadata` are byte-identical to the template. `app/very_good.yaml` is new. The root `.github/` files differ from the template only where the plan says they should (`working_directory: app`, dependabot `/app`, license paths, coverage inputs, spell-check includes, the "Read before accept" PR section). The scaffold's own `LICENSE` and `README.md` were deleted as the plan asked; one `LICENSE` sits at the root. Throwaway removed afterwards.

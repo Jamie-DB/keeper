@@ -1,5 +1,17 @@
 # Code Review — keeper-status-bootstrap
 
+> **This is the report as delivered on Sep 13, 2026, and it is deliberately not maintained.**
+> Its findings are written in the present tense because that is how they were reported, and
+> most of them have since been applied: the README now lists every gate step, the dead
+> spell-check glob is gone, and the scaffold was re-run with the two missing flags. What
+> happened to each finding is recorded in the README's review comparison row, not here.
+> Two were deferred to slice two and are recorded under Future Considerations in the plan.
+> Read this file as evidence of what four reviewers caught on one diff, which is what the
+> comparison table cites it for. Do not read it as a description of current code, and do not
+> edit it to match current code: correcting it would destroy the only thing it proves.
+> Its four per-agent reports under `raw/` carry the same caveat, including one place where two
+> of the agents disagreed with each other about the `bootstrap.dart` coverage exclusion.
+
 10 findings · 🔴 0 critical · 🟡 5 important · 🔵 5 suggestions
 Across 38 files (platform directories excluded). Agents: vgv-review-agent, architecture-review-agent, test-quality-review-agent, code-simplicity-review-agent. All four completed.
 
