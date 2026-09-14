@@ -177,6 +177,21 @@ FINDING-14 through FINDING-22 are style, duplication and precision items. Read t
 
 FINDING-01, 02, 09 and 11 carry their own **Status** lines in the detail above.
 
+## `flutter-reviewer`, dispatched after the fixes
+
+The `vgv-ai-flutter-plugin:flutter-reviewer` subagent ran on the fifth commit, after the sixteen fixes above. It was expected to have nothing in scope, since no `.dart` file changed on this branch. Instead it was pointed at the Dart snippets inside the four teaching blocks, on the grounds that those become `app/lib/domain/`, `app/lib/repositories/` and `app/lib/alert_inbox/` by hand and no agent may correct the result. It found four items the four wingspan agents missed, two of them real defects in the same class as the Criticals.
+
+Its own scope statement: no compiled surface, no analyzer run, every claim reasoned from reading. Accessibility had no surface at all, stated plainly rather than reached for.
+
+- **FR-01, testing. The equality test could not fail.** `const a` and `const b` built from identical arguments are canonicalized to one instance and `Equatable`'s `==` short-circuits on `identical`, so `expect(a, equals(b))` asserted that an object equals itself and passed even if `props` returned an empty list. The block's own prose calls a field missing from `props` the classic bug and Phase 2's acceptance criteria require one equality test per class, so the worked example propagated a test that could not catch the bug it existed for, into eight files. **Fixed**: one operand is now `final`, and an `isNot` inequality case was added, with a paragraph naming the canonicalization trap.
+- **FR-02, bloc. `Verdict` carried no `Equatable`.** State shape declares `EvaluationResult` sealed and `Equatable` and Phase 2 says every class carries it, while Phase 2's own `Lookup` example does. The Phase 3 skeleton did not. This defect was introduced by the fix for FINDING-09 earlier the same day, and it walks into the nested-plain-class trap that FINDING-11's fix documents four blocks later. **Fixed**: `Verdict` extends `Equatable` with `props` on the variant that carries a value, plus a paragraph on why `isA` assertions hide the problem rather than removing it.
+- **FR-03, testing. `emit` deduplication was unstated.** `emit` drops a state equal to the current one except on the very first emit, which is the only reason the example's `expect` list opens with a `Loading` equal to the initial state. The bullet described `expect` as the exact ordered list with no mention of it. **Fixed**: one clause added, including that a case dispatching the event twice will not see the second `Loading`.
+- **FR-04, security. Release logging of alert payloads is undecided.** Extends PR 1's recorded observer finding rather than repeating it: Phase 4 is where the logged payload stops being an `int`. **Open**, because it is a decision rather than a defect. See the options recorded with it.
+
+Two things it affirmatively cleared, recorded so a later reviewer does not "fix" them: the fixed-seed generator behind `seed_readings.dart` is reproducibility and must not become `Random.secure()`, and the Phase 4 handler's `on Exception` into a generic failure state is the sanitization pattern the standard asks for.
+
+One item out of diff, offered for the next plan pass rather than as a finding: Phase 6 specifies a single WCAG criterion, the colour-alone cue, for screens that also engage semantic labels on the severity icons, target size on the list rows, and text scaling on the severity and recovering-until lines.
+
 ## Reviewer's assessment
 
 The two Criticals and FINDING-09 are the same class of defect and they are mine: teaching snippets whose prose and code disagree, in the one part of the repository where no agent may later fix the code the snippet produces. FINDING-11 is the most consequential of the Importants, because it is a false statement about a library the author will trust.

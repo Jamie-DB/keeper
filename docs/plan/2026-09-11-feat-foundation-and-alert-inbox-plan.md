@@ -508,12 +508,20 @@ void main() {
   group(Book, () {
     test('is equal to another book with the same fields', () {
       const a = Book(id: BookId('b-1'));
-      const b = Book(id: BookId('b-1'));
+      final b = Book(id: const BookId('b-1'));
       expect(a, equals(b));
+    });
+
+    test('is not equal to a book with a different format', () {
+      const a = Book(id: BookId('b-1'));
+      const b = Book(id: BookId('b-1'), format: Format.audio);
+      expect(a, isNot(equals(b)));
     });
   });
 }
 ```
+
+**One of the two operands must not be `const`, and this is the trap in the whole phase.** Dart canonicalizes two identical `const` expressions to a single instance, and `Equatable`'s `==` short-circuits on `identical`, so a const-to-const comparison asserts that an object equals itself. It passes even when `props` returns an empty list, which is exactly the bug the test exists to catch. The inequality test above is the other half: a field missing from `props` makes two differing values compare equal, and only `isNot` catches that. Write both for every `Equatable` class.
 
 - `group(Book, ...)` takes the type, not a string, so a rename is caught by the analyzer.
 - Names read as a sentence down the hierarchy: "Book is equal to another book with the same fields".
@@ -609,14 +617,20 @@ The window is a count, not a duration, so it never drains however long an excurs
 **Reading a sealed result in a test.** `Verdict` is the skeleton's own sealed return type, with one variant carrying the number the test cares about. Phase 4's block switches over the same three variant names one stage later, where the breached variant carries a whole run rather than a single reading's magnitude.
 
 ```dart
-sealed class Verdict {
+sealed class Verdict extends Equatable {
   const new();
+
+  @override
+  List<Object?> get props => [];
 }
 
 final class Breached extends Verdict {
   const new(this.magnitude);
 
   final double magnitude;
+
+  @override
+  List<Object?> get props => [magnitude];
 }
 
 final class Quiet extends Verdict {
@@ -627,6 +641,8 @@ final class Warming extends Verdict {
   const new();
 }
 ```
+
+`Equatable` on the result type is not optional even though the tests below assert with `isA` and a cast. State shape declares `EvaluationResult` sealed **and** `Equatable`, and a result without it is the nested plain class described in Phase 4: an `Anomalous` carrying an `Anomaly`, or a list of results compared as a whole, falls back to identity and never matches. Asserting with `isA` hides that through every test in this phase, so it would surface in Phase 4 or at the slice-two extraction instead of where it was written.
 
 ```dart
 final result = check.check(at, 117.5);
@@ -847,7 +863,7 @@ void main() {
 
 - The mock is one line: extend `Mock`, implement the concrete class, and end with a `;` rather than `{}`, per `empty_container_bodies`. Private, underscore-prefixed, one per file.
 - `when(() => repository.method()).thenAnswer((_) async => value)` stubs an async method, `thenThrow` covers the failure path. The closure is required: `when` takes a callback, not a call. Stub inside each case's own `setUp:` so every case states its own world.
-- `build` creates the Bloc, `act` adds the event, and `expect` is the exact ordered list of states emitted **after** `act`. The initial state is not in that list.
+- `build` creates the Bloc, `act` adds the event, and `expect` is the exact ordered list of states emitted **after** `act`. The initial state is not in that list. `emit` also drops a state equal to the current one, except on the very first emit, which is the only reason `ThingLoading()` appears above when it equals the initial state; a case that dispatches the event twice will not see the second `Loading`.
 - `late` plus `setUp` inside the group, so every case gets a fresh mock.
 - `expect` compares with `==`, so every state and everything inside it must come through `Equatable`. `List`, `Set` and `Map` fields in `props` all compare by content, each element or value recursively. The two traps are a field left out of `props`, and a nested **plain** class, which is not `Equatable` and so falls back to identity and never matches.
 
