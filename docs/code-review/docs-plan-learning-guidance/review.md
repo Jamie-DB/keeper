@@ -5,7 +5,15 @@
 **Agents**: `vgv-review-agent`, `architecture-review-agent`, `test-quality-review-agent`, `code-simplicity-review-agent`. All four completed.
 
 **Critical**: 2 | **Important**: 11 | **Suggestion**: 9 · 22 findings from 27 agent reports after deduplication.
-**Applied Sep 13, 2026**: FINDING-01, FINDING-02, FINDING-09 and FINDING-11. The remaining 18 are open.
+**Applied Sep 13, 2026**: FINDING-01, 02, 04, 05, 06, 07, 09, 11, 12, 13, 18 and 21, in two passes. **Awaiting a decision**: FINDING-03, 08, 10 and 20, which are design calls rather than defects. **Deferred**: FINDING-14, 15, 16, 17, 19 and 22, duplication and precision items with no correctness cost, left for the next plan pass.
+
+## Review timing, and why it matters here
+
+The plan requires all three reviewers to report on one commit, or the comparison table compares three different diffs. That did not happen on this branch and the record should say so plainly.
+
+`/review` ran on the branch's second commit, the one that committed PR 1's report. Twelve of its findings were then fixed across the next two commits, the first covering the two Criticals plus the `Equatable` claim, the second the eight false or self-contradicting statements this branch had introduced. `flutter-reviewer` and CodeRabbit therefore see a later commit than `/review` did, with twelve findings already closed.
+
+Two consequences for any comparison row written from this branch. First, silence from the other two reviewers on anything in this list is not agreement, it is a diff that no longer contains the defect. Second, `/review` had the advantage of going first on unreviewed text, which is the likeliest explanation for the count, and a row that reports 22 against their totals without saying so would be misleading. The order is worth keeping for future pull requests: reviewing before fixing is what makes the columns comparable, and this branch is the counter-example.
 
 The diff retracts the plan's cold-writing requirement and replaces it with four collapsed teaching blocks, one under each of Phases 1 to 4, and commits PR 1's review report as evidence. Every Critical and Important finding below was reproduced against the file before it was recorded here. The one exception is stated in FINDING-11.
 
@@ -148,6 +156,19 @@ FINDING-14 through FINDING-22 are style, duplication and precision items. Read t
 - **FINDING-20** `plan:789` — `_ordered` compares `severity.index`, so "severity descending" holds only while `Severity` is declared low to critical, an order no Phase 2 acceptance criterion states. `architecture-review-agent`.
 - **FINDING-21** `plan:995` — "every gate points at `app/` alone" is overstated: `spell-check` points at the root `README.md` and `semantic-pull-request` is repository-wide. `architecture-review-agent`.
 - **FINDING-22** `plan:995` — "a build job or a matrix over `packages/*`" leaves the job type open, and the current job uses `flutter_package.yml`, so slice two could gate a pure-Dart package with a Flutter toolchain. `architecture-review-agent`.
+
+## Outcomes on the applied findings
+
+- **FINDING-04** Fixed. The table's opening claim is now that each pull request is reviewed three ways, with the row recording where the three did not see the same commit or file set, and the `/review` cell names the byte-for-byte scaffold exclusion that kept the counter's widgets out of its scope.
+- **FINDING-05** Fixed. The two deferrals are stated separately, with the spell-check glob recorded as removed immediately and only its `packages/` replacement deferred.
+- **FINDING-06** Fixed. The bullet narrows `includes` to the root `README.md` alone and records that `app/**/*.md` was an earlier draft's error caught by PR 1's review.
+- **FINDING-07** Fixed. The line now says the plain `extension` was already read in `pump_app.dart` and `l10n.dart`, and the `extension type` arrives in Phase 2 as `HiveId` and `AlertId`.
+- **FINDING-12** Fixed. The deferred list carries `collect_coverage_from: all`, `min_coverage: 100` and a `very_good.yaml` for the package.
+- **FINDING-13** Fixed. The deferred list records a second license-check job with its own `working_directory` and `flutter_version`, because the reusable workflow's input takes one string, plus `packages/*/pubspec.lock` in both paths lists.
+- **FINDING-18** Fixed. The three enum values sit on their own lines, which is what `dart format` produces.
+- **FINDING-21** Fixed. The paragraph now says the build job, license check and dependabot are `app/`-scoped, and that spell-check names files one by one while `semantic-pull-request` is repository-wide.
+
+FINDING-01, 02, 09 and 11 carry their own **Status** lines in the detail above.
 
 ## Reviewer's assessment
 
