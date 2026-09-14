@@ -543,18 +543,18 @@ void main() {
 
 Throwaway types again, and the fold below is a skeleton with every branch left out, because the branches are the spec above.
 
-**A fold as an object, because it carries state.** Each rule is a constructor parameter with a default, so a test can shrink the numbers and keep its fixture on one screen while production keeps the plan's values.
+**A fold as an object, because it carries state.** Each rule is a constructor parameter whose **default is the decided policy value**, so production constructs the evaluator with nothing but the metric's floor, and a test passes shrunken numbers to keep its fixture on one screen. Defaults that are the fixture scale rather than the policy are the trap here: a call site that omits an argument would then run a policy the false-positive document does not describe, and every test would still pass.
 
 ```dart
 class RollingCheck {
   new({
     required this.floor,
-    this.window = 8,
-    this.minimumHistory = 4,
+    this.window = 672,
+    this.minimumHistory = 336,
     this.breachSigma = 3,
     this.clearSigma = 2.5,
-    this.consecutive = 2,
-    this.cadence = const Duration(minutes: 1),
+    this.consecutive = 3,
+    this.cadence = const Duration(minutes: 15),
   });
 
   final double floor;
@@ -603,13 +603,32 @@ void _admit(double value) {
 
 The window is a count, not a duration, so it never drains however long an excursion runs. Readings judged `InsufficientHistory` are admitted, or the window never fills. Readings judged anomalous are not, or an excursion contaminates the baseline the next reading is judged against. Those are two of the named tests.
 
-**Reading a sealed result in a test.**
+**Reading a sealed result in a test.** `Verdict` is the skeleton's own sealed return type, with one variant carrying the number the test cares about. Phase 4's block switches over the same three variant names one stage later, where the breached variant carries a whole run rather than a single reading's magnitude.
+
+```dart
+sealed class Verdict {
+  const new();
+}
+
+final class Breached extends Verdict {
+  const new(this.magnitude);
+
+  final double magnitude;
+}
+
+final class Quiet extends Verdict {
+  const new();
+}
+
+final class Warming extends Verdict {
+  const new();
+}
+```
 
 ```dart
 final result = check.check(at, 117.5);
-expect(result, isA<Found>());
-final book = (result as Found).book;
-expect(book.id, equals(const BookId('b-1')));
+expect(result, isA<Breached>());
+expect((result as Breached).magnitude, closeTo(3.75, 0.001));
 ```
 
 `isA<T>()` asserts the variant, `as` casts once the variant is known. For a double carried on a variant, `closeTo(3.75, 0.001)`. Never `equals` on a double.
@@ -802,28 +821,32 @@ static List<Result> _ordered(List<Result> results) {
 ```dart
 class _MockThingRepository extends Mock implements ThingRepository;
 
-late ThingRepository repository;
+void main() {
+  group(ThingBloc, () {
+    late ThingRepository repository;
 
-setUp(() {
-  repository = _MockThingRepository();
-});
+    setUp(() {
+      repository = _MockThingRepository();
+    });
 
-blocTest<ThingBloc, ThingState>(
-  'emits failure when the repository throws',
-  setUp: () {
-    when(() => repository.fetchResults()).thenThrow(Exception('down'));
-  },
-  build: () => ThingBloc(repository: repository),
-  act: (bloc) => bloc.add(const ThingLoadRequested()),
-  expect: () => const [ThingLoading(), ThingLoadFailure()],
-);
+    blocTest<ThingBloc, ThingState>(
+      'emits failure when the repository throws',
+      setUp: () {
+        when(() => repository.fetchResults()).thenThrow(Exception('down'));
+      },
+      build: () => ThingBloc(repository: repository),
+      act: (bloc) => bloc.add(const ThingLoadRequested()),
+      expect: () => const [ThingLoading(), ThingLoadFailure()],
+    );
+  });
+}
 ```
 
 - The mock is one line: extend `Mock`, implement the concrete class, and end with a `;` rather than `{}`, per `empty_container_bodies`. Private, underscore-prefixed, one per file.
 - `when(() => repository.method()).thenAnswer((_) async => value)` stubs an async method, `thenThrow` covers the failure path. The closure is required: `when` takes a callback, not a call. Stub inside each case's own `setUp:` so every case states its own world.
 - `build` creates the Bloc, `act` adds the event, and `expect` is the exact ordered list of states emitted **after** `act`. The initial state is not in that list.
 - `late` plus `setUp` inside the group, so every case gets a fresh mock.
-- `expect` compares with `==`, so every state and everything inside it must come through `Equatable`. A `List` field compares element by element through `props`; a `Map` does not.
+- `expect` compares with `==`, so every state and everything inside it must come through `Equatable`. `List`, `Set` and `Map` fields in `props` all compare by content, each element or value recursively. The two traps are a field left out of `props`, and a nested **plain** class, which is not `Equatable` and so falls back to identity and never matches.
 
 </details>
 
