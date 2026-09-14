@@ -252,8 +252,9 @@ Only what slice one uses. `drift`, `fl_chart`, `graphql_flutter` and `bloc_concu
 | `go_router` | Added in Phase 6. The `alert/:id` route, so the deep-link shape exists before notifications would need it |
 | `mocktail` | Scaffolded in. The repository mock in the Bloc test and in the Page test. Never `mockito` |
 | `bloc_test` | Scaffolded in. `blocTest()` for the Bloc, `MockBloc` and `MockCubit` for the View tests |
+| `test` | Added by hand at the start of Phase 2, under `dev_dependencies`. Domain and repository tests import it rather than `flutter_test`, so the slice-two extraction of `packages/hive_domain/` moves those files instead of rewriting their imports |
 
-Only `equatable` and `go_router` are pubspec edits. The template already ships `bloc`, `flutter_bloc`, `bloc_test`, `mocktail`, `bloc_lint` and `very_good_analysis`, verified against the CLI 1.5.0 bundle on Sep 13, 2026, so Phase 4 adds nothing. Check each against pub.dev on the day. The versions in `docs/original-plan.md` section 3 are a Sep 11 snapshot, not a pin.
+Only `equatable`, `test` and `go_router` are pubspec edits. The template already ships `bloc`, `flutter_bloc`, `bloc_test`, `mocktail`, `bloc_lint` and `very_good_analysis`, verified against the CLI 1.5.0 bundle on Sep 13, 2026, so Phase 4 adds nothing. Check each against pub.dev on the day. The versions in `docs/original-plan.md` section 3 are a Sep 11 snapshot, not a pin.
 
 `go_router` without `go_router_builder` leaves `alert/:id` stringly typed. That is consistent with keeping codegen out of slice one, and the cost is a route that fails at runtime rather than at compile time if a path is mistyped. Stated here rather than discovered.
 
@@ -372,13 +373,13 @@ Three more worth knowing before the first file. `always_use_package_imports` for
 - **Scope:** Write the false-positive policy as a document first, then the domain value classes with their unit tests.
 - **Earns:** A false-positive policy defended one sentence per number, and the first Dart reps pointable by file. `Equatable`, because Dart classes are identity-equal by default, unlike a Swift struct, and a Bloc emitting an equal-but-not-`==` state rebuilds forever. Sealed classes with exhaustive `switch`, the closest Dart has to Swift enums with associated values. A record, two extension types, and a `const` constructor on every domain type, which the analyzer asks for on an `Equatable` class anyway and is the first meeting with `const` as a contract. Pure Dart tests that run in milliseconds without a widget.
 - **Read first:** the eight decisions through the incident paragraphs, the `Alert` and anomaly shapes under State shape, `docs/original-plan.md` section 2 for each type's fields, and the collapsed constructs block at the end of this phase. Where they differ this plan wins: the fifth metric is `tilt`, not motion, and nothing this plan cut or deferred is written.
-- **Files touched:** `docs/false-positive-policy.md`, `app/pubspec.yaml` (adds `equatable`), `app/lib/domain/*.dart`, `app/test/domain/*_test.dart`
+- **Files touched:** `docs/false-positive-policy.md`, `app/pubspec.yaml` (adds `equatable`, and `test` under `dev_dependencies`), `app/lib/domain/*.dart`, `app/test/domain/*_test.dart`
 - **Detail:**
   - Phases 2 to 4 sit on one branch off `main` after PR 1 merges, and that branch becomes PR 2. Commit at the end of each phase at minimum, formatted with `dart format` and clean under `flutter analyze`, so the gate's diff in Phase 5 is test additions and not whitespace.
   - The policy is written before the evaluator and restates all eight decisions with the reasoning for each, **plus the per-metric sigma floor and the count-based window**, two rules the decisions implied but did not name. It must also state what a false negative costs against a false positive, because that is the first question the design invites. And it settles one thing the decisions table leaves open, because the flap test depends on it: whether the consecutive counter, before any alert is open, resets on the first reading back inside the 3.0 edge or keeps counting until a reading drops under the 2.5 clearing edge. Either is defensible in a sentence. Pick one and write it down, and do the same for which tier owns a reading at exactly 4.5 and exactly 6.0 sigma, because otherwise the tier function decides it and the document gets written to match.
   - Domain types: `Yard`, `Hive`, `HiveStatus`, `Metric`, `Reading`, `Anomaly`, `Alert`, `Severity`. Every class carries `Equatable`; enums and extension types have value equality already. Sealed classes or enums with exhaustive `switch` at the use site. `AlertStatus` is not written here: every slice-one alert is new and nothing moves it, so a sealed type with six variants and one constructor call is the `YardConditions` case again. It arrives in slice three with the triage that produces it. `Yard` is an id and a name; the layout and hive positions arrive with the yard screen in slice three. `EvaluationResult`, `Baseline` and `CandidateCause` are the exceptions and are written in Phase 3, in `evaluator.dart`, `baseline.dart` and `candidate_causes.dart`, because each only makes sense beside the code that computes it.
   - Dart on purpose, deliberately and pointably: a record for the anomaly's magnitude-and-duration pair, an extension type for `HiveId` and `AlertId`, sealed classes for `EvaluationResult` and every Bloc state with exhaustive `switch`. The destructuring `switch` over `EvaluationResult` in Phase 4's repository is the first pattern-matching rep and is pointable now; sealed `AlertStatus` and the triage switch are slice three's. No isolate. There is no honest use for one in this app and manufacturing one is worse than not having one.
-- **Acceptance criteria:** Every class carrying `Equatable` has a test file asserting value equality and its own behaviour; enums and extension types get a test only where they carry behaviour. The policy document names all eight decided values plus the per-metric sigma floor and the window as a count, each with a reason, and states what a false negative costs against a false positive.
+- **Acceptance criteria:** `Severity` is declared least severe first, so `index` ascends with severity and decision 7's "severity descending" is `b.severity.index.compareTo(a.severity.index)`; a test asserts that ordering across three tiers rather than leaving the inbox sort to depend on an undeclared order. Every class carrying `Equatable` has a test file asserting value equality and its own behaviour; enums and extension types get a test only where they carry behaviour. The policy document names all eight decided values plus the per-metric sigma floor and the window as a count, each with a reason, and states what a false negative costs against a false positive.
 - **Validation:** `cd app && flutter test test/domain`, in a terminal. Fast loop, not the gate: any `very_good test` in `app/` reads `very_good.yaml` and is the full gate, scoped or not. See Phase 5. Commit when green.
 
 <details>
@@ -517,7 +518,7 @@ void main() {
 - `group(Book, ...)` takes the type, not a string, so a rename is caught by the analyzer.
 - Names read as a sentence down the hierarchy: "Book is equal to another book with the same fields".
 - `expect(actual, matcher)`. The matchers this plan needs: `equals`, `isNot`, `isA<T>()`, `closeTo(value, delta)` for doubles, `isEmpty`, `hasLength(n)`, `everyElement(m)`.
-- Domain tests in `app/` import `package:flutter_test/flutter_test.dart`, which re-exports the same API as `package:test`, and they run in milliseconds because no widget is involved.
+- Domain tests import `package:test/test.dart`, not `package:flutter_test/flutter_test.dart`. Both expose the same API here, but `packages/hive_domain/` is pure Dart and cannot depend on the Flutter SDK, so choosing `test` now is the difference between moving these files at the slice-two extraction and rewriting every import in them. They run in milliseconds either way, because no widget is involved.
 - `flutter test test/domain` runs the folder without the coverage gate.
 
 </details>
@@ -713,10 +714,10 @@ List<(Guess, double)> rank(Set<Signal> observed) {
 
 ```dart
 class ThingRepository {
-  new({required this.things, required this.checks});
+  new({required this._things, required this._checks});
 
-  final List<Thing> things;
-  final List<Check> checks;
+  final List<Thing> _things;
+  final List<Check> _checks;
 
   Future<List<Result>> fetchResults() async {
     // ...
@@ -724,7 +725,7 @@ class ThingRepository {
 }
 ```
 
-`required this.things` is an initializing formal, so nothing is constructed inside and a test passes fixtures in. No interface: one implementation exists, and `mocktail` mocks a concrete class, so testability is not a reason to add one. No Flutter import, so the layer stays pure Dart. `Future` and `async`/`await` map one to one from Swift. `bloc_lint`'s `avoid_public_fields` applies to Blocs and not to repositories, so public `final` fields are fine here; make them `required this._things` when no test needs to read them back.
+`required this._things` is an initializing formal onto a private field, so nothing is constructed inside and a test passes fixtures in. **Private is the default and a public field needs a caller that justifies it.** Public here would put the raw reading series on `AlertRepository`'s API, and a Bloc or a widget could then read readings and skip the evaluator, which is the layer inversion the architecture rules forbid. No interface: one implementation exists, and `mocktail` mocks a concrete class, so testability is not a reason to add one. No Flutter import, so the layer stays pure Dart. `Future` and `async`/`await` map one to one from Swift.
 
 **Collapsing a per-reading result into runs.** A nullable local is the whole trick.
 

@@ -5,7 +5,9 @@
 **Agents**: `vgv-review-agent`, `architecture-review-agent`, `test-quality-review-agent`, `code-simplicity-review-agent`. All four completed.
 
 **Critical**: 2 | **Important**: 11 | **Suggestion**: 9 · 22 findings from 27 agent reports after deduplication.
-**Applied Sep 13, 2026**: FINDING-01, 02, 04, 05, 06, 07, 09, 11, 12, 13, 18 and 21, in two passes. **Awaiting a decision**: FINDING-03, 08, 10 and 20, which are design calls rather than defects. **Deferred**: FINDING-14, 15, 16, 17, 19 and 22, duplication and precision items with no correctness cost, left for the next plan pass.
+**Applied Sep 13, 2026**: 16 of 22, in three passes. The two Criticals and the `Equatable` claim first; then the eight false or self-contradicting statements this branch had introduced; then the four design calls, each decided by Jamie rather than absorbed into a cleanup.
+
+**Deferred, 6**: FINDING-14, 15, 16, 17, 19 and 22. Duplication and precision items with no correctness cost, left for the next plan pass. They are open, not silently dropped.
 
 ## Review timing, and why it matters here
 
@@ -167,6 +169,11 @@ FINDING-14 through FINDING-22 are style, duplication and precision items. Read t
 - **FINDING-13** Fixed. The deferred list records a second license-check job with its own `working_directory` and `flutter_version`, because the reusable workflow's input takes one string, plus `packages/*/pubspec.lock` in both paths lists.
 - **FINDING-18** Fixed. The three enum values sit on their own lines, which is what `dart format` produces.
 - **FINDING-21** Fixed. The paragraph now says the build job, license check and dependabot are `app/`-scoped, and that spell-check names files one by one while `semantic-pull-request` is repository-wide.
+
+- **FINDING-03** Fixed. Rule 8 is 65 words rather than 109: the boundary, one reason, and a pointer to the plan for the guidance. The procedural clause and the pull request 7 history are gone, the plan already carrying both.
+- **FINDING-08** Fixed. Domain tests import `package:test/test.dart`, `test` is added to `app/pubspec.yaml` under `dev_dependencies` in Phase 2's files-touched list and to the dependency table with its reason, and the pubspec-edit count is corrected from two packages to three. The stated reason is the one that matters: choosing `test` now is the difference between moving these files at the slice-two extraction and rewriting every import in them.
+- **FINDING-10** Fixed. The repository snippet takes `required this._things` onto private fields, and the prose states that private is the default and a public field needs a caller that justifies it, because public would put the raw reading series on `AlertRepository`'s API and let a Bloc or widget skip the evaluator.
+- **FINDING-20** Fixed. Phase 2's acceptance criteria now require `Severity` declared least severe first, state that this makes decision 7's "severity descending" `b.severity.index.compareTo(a.severity.index)`, and require a test asserting that ordering across three tiers.
 
 FINDING-01, 02, 09 and 11 carry their own **Status** lines in the detail above.
 
